@@ -7,7 +7,6 @@ from zeep.wsdl.utils import etree
 from robot.api import logger
 from robot.api.deco import keyword
 
-
 logging.config.dictConfig({
     'version': 1,
     'formatters': {
