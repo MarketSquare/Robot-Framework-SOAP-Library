@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot rpa="false" generated="20191009 14:45:46.987" generator="Robot 3.1.1 (Python 2.7.12 on win32)">
+<suite source="C:\Altran\AVVSoap\test.robot" id="s1" name="Test">
+<test id="s1-t1" name="teste1">
+<kw name="Create SOAP Client" library="AltranSoap">
+<doc>Loads a WSDL from the given URL and creates a Zeep client.
+List all Available operations/methods:</doc>
+<arguments>
+<arg>https://blestar.net/WebServiceBlestar/server.php?wsdl</arg>
+</arguments>
+<msg timestamp="20191009 14:45:48.529" level="FAIL">ValueError: Invalid tag name u''</msg>
+<status status="FAIL" endtime="20191009 14:45:48.529" starttime="20191009 14:45:47.726"></status>
+</kw>
+<status status="FAIL" endtime="20191009 14:45:48.530" critical="yes" starttime="20191009 14:45:47.725">ValueError: Invalid tag name u''</status>
+</test>
+<status status="FAIL" endtime="20191009 14:45:48.534" starttime="20191009 14:45:46.991"></status>
+</suite>
+<statistics>
+<total>
+<stat fail="1" pass="0">Critical Tests</stat>
+<stat fail="1" pass="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat fail="1" id="s1" name="Test" pass="0">Test</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
