@@ -1,45 +1,44 @@
 *** Settings ***
+Library           ../SoapLibrary/
 Library           Collections
-Library           SoapLibrary.py
 Library           OperatingSystem
 
 *** Variables ***
-
+${requests_dir}                      ${CURDIR}${/}Requests
+${wsdl_correios_price_calculator}    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
+${wsdl_ip_geo}                       http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl
 
 *** Test Cases ***
 Test read
-    Create Soap Client    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
-    ${response}    Call SOAP Method With XML    ${CURDIR}/Request_CalcPrecoPrazo.xml
+    Create Soap Client    ${wsdl_correios_price_calculator}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_CalcPrecoPrazo.xml
     ${valor}    Get Data From XML By Tag    ${response}    ValorSemAdicionais
-    Log    ${valor}
     should be equal    23,50    ${valor}
 
 Test read utf8
-    Create Soap Client    http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl
-    ${response}    Call SOAP Method With XML    ${CURDIR}/request_ip.xml
+    Create Soap Client    ${wsdl_ip_geo}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
     ${City}    Get Data From XML By Tag    ${response}    City
-    Log    ${City}
     should be equal as strings    Fundão    ${City}
 
 Test Read tags with index
-    Create Soap Client    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
-    ${response}    Call SOAP Method With XML    ${CURDIR}/Request_ListaServicos.xml
+    Create Soap Client    ${wsdl_correios_price_calculator}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_ListaServicos.xml
     ${codigo}    Get Data From XML By Tag    ${response}    codigo    index=99
-    Log    ${codigo}
     should be equal as integers    11835    ${codigo}
 
 Test Edit and Read
-    Create Soap Client    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
+    Create Soap Client    ${wsdl_correios_price_calculator}
     ${dict}    Create Dictionary    tem:sCepDestino=80020000    tem:nVlPeso=4
-    ${xml_edited}    Edit XML Request    ${CURDIR}/Request_CalcPrecoPrazo.xml    ${dict}    New_Request_CalcPrecoPrazo
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}Request_CalcPrecoPrazo.xml    ${dict}    New_Request_CalcPrecoPrazo
     ${response}    Call SOAP Method With XML    ${xml_edited}
     ${valor}    Get Data From XML By Tag    ${response}    ValorSemAdicionais
     Log    ${valor}
     should be equal    57,80    ${valor}
 
 Test Response to Dict
-    Create Soap Client    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
-    ${response}    Call SOAP Method With XML    ${CURDIR}/Request_CalcPrecoPrazo.xml
+    Create Soap Client    ${wsdl_correios_price_calculator}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_CalcPrecoPrazo.xml
     ${dict_response}    Convert XML Response to Dictionary    ${response}
     Log    ${dict_response}
     ${body}    Get From Dictionary    ${dict_response}    Body
@@ -52,7 +51,6 @@ Test Response to Dict
     should be equal    23,50    ${valorsemadicionais}
 
 Test Save File Response
-    Create Soap Client    http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl
-    ${response}    Call SOAP Method With XML    ${CURDIR}/request_ip.xml
+    Create Soap Client    ${wsdl_ip_geo}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
     ${file}    Save XML Response File    ${response}    response_test
-    log    ${file}
