@@ -11,8 +11,6 @@ from robot.api.deco import keyword
 logging.config.dictConfig(DICT_CONFIG)
 
 DEFAULT_HEADERS = {'Content-Type': 'text/xml; charset=utf-8'}
-LOG_HEADER_RESPONSE_FROM_WS = '<font size="3"><b>Response from webservice:</b></font> '
-LOCAL_NAME_XPATH = "//*[name()='%s']"
 
 
 class SoapLibrary:
@@ -22,11 +20,16 @@ class SoapLibrary:
 
     @keyword("Create SOAP Client")
     def create_soap_client(self, url):
-        """ Loads a WSDL from the given URL and creates a Zeep client.
-            List all Available operations/methods:
+        """
+        Loads a WSDL from the given URL and creates a Zeep client.
+        List all Available operations/methods with INFO log level.
 
-            Example:
-                | Create SOAP Client | Hostname?wsdl |
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | url | wsdl url |
+
+        *Example:*
+        | Create SOAP Client | Hostname?wsdl |
         """
         self.url = url
         session = Session()
@@ -38,11 +41,17 @@ class SoapLibrary:
 
     @keyword("Call SOAP Method With XML")
     def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS):
-        """ Send the informed XML to the SOAP client. You only need to inform the path to the Request XML, the SOAP
-            method are inside the XML file.
+        """
+        Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument,
+        the SOAP method is inside the XML file.
 
-            Example:
-                | ${response} | Call SOAP Method With XML |  C:\\Request.xml |
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | xml | file path to xml file |
+        | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
+
+        *Example:*
+        | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         raw_text_xml = self._convert_xml_to_raw_text(xml)
@@ -54,21 +63,27 @@ class SoapLibrary:
             logger.debug('URL: %s' % response.url)
             logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
             raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (status_code, response.reason))
-        logger.info(LOG_HEADER_RESPONSE_FROM_WS, html=True)
+        log_header_response_from_ws = '<font size="3"><b>Response from webservice:</b></font> '
+        logger.info(log_header_response_from_ws, html=True)
         logger.info(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
         return etree_response
 
     @keyword("Get Data From XML By Tag")
     def get_data_from_xml_tag(self, xml, tag, index=1):
-        """ Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show
-            an warning.
+        """
+        Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning.
+        The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.
 
-            The xml must be the return of the `Call SOAP Method With XML`
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | xml | xml etree object |
+        | tag | tag to get value from |
+        | index | tag index if there are multiple tags with the same name, starting at 1. Default is set to 1 |
 
-            Example:
-                | ${response} | Call SOAP Method With XML |  C:\\Request.xml |
-                | Get Data From XML By Tag |  ${response} | SomeTag |
-                | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |
+        *Examples:*
+        | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
+        | Get Data From XML By Tag |  ${response} | SomeTag |
+        | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |
         """
         new_index = index - 1
         xpath = self._parse_xpath(tag)
@@ -77,69 +92,76 @@ class SoapLibrary:
             return int(data_list)
         if len(data_list) == 0:
             logger.warn('The search "%s" did not return any result! Please confirm the tag!' % xpath)
-        if len(data_list) > 1:
+        elif len(data_list) > 1:
             logger.warn('The tag you entered found %s items, returning the text in the index '
                         'number %s, if you want a different index inform the argument index=N' % (len(data_list), new_index))
         return data_list[new_index].text
 
     @keyword("Edit XML Request")
-    def edit_xml(self, xml_file_path, new_values_dict, request_name):
-        """ Changes a field on the given XML to a new given value, the values must be in a dictionary.
-            xml_filepath must be a "template" of the request to the webservice.
-            new_values_dict must be a dictionary with the keys and values to change.
-            request_name will be the name of the new XMl file generated with the changed request.
+    def edit_xml(self, xml_file_path, new_values_dict, edited_request_name):
+        """
+        Changes a field on the given XML to a new given value, the values must be in a dictionary.
+        xml_filepath must be a "template" of the request to the webservice.
+        new_values_dict must be a dictionary with the keys and values to change.
+        request_name will be the name of the new XMl file generated with the changed request.
 
-            Returns the file path of the new Request file.
+        Returns the file path of the new Request file.
 
-            Example:
-                | ${dict} | Create Dictionary | someKey=someValue | someOtherKey=someOtherValue |
-                | ${xml_edited} | Edit XML Request | request_filepath | ${dict} | New_Request |
-                | ${response} | Call SOAP Method With XML | ${xml_edited} |
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | xml_file_path | file path to xml file |
+        | new_values_dict | dictionary with tags as keys and tag value as value |
+        | edited_request_name |  name of the new XMl file generated with the changed request |
+
+        *Example*:
+        | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |
         """
         string_xml = self._convert_xml_to_raw_text(xml_file_path)
         xml = self._convert_string_to_xml(string_xml)
         if not isinstance(new_values_dict, dict):
             raise Exception("new_values_dict argument must be a dictionary")
         for key, value in new_values_dict.iteritems():
-            if len(xml.xpath(LOCAL_NAME_XPATH % key)) == 0:
+            if len(xml.xpath(self._replace_xpath_by_local_name(key))) == 0:
                 logger.warn('Tag "%s" not found' % key)
                 continue
-            xml.xpath(LOCAL_NAME_XPATH % key)[0].text = value
+            xml.xpath(self._replace_xpath_by_local_name(key))[0].text = value
         # Create new file with replaced request
-        new_file_name = str(request_name) + ".xml"
-        new_file_path = os.path.join(os.path.dirname(xml_file_path), new_file_name)
-        request_file = open(new_file_path, 'wb')
-        request_file.write(etree.tostring(xml))
-        request_file.close()
+        new_file_path = self._save_to_file(os.path.dirname(xml_file_path), edited_request_name, etree.tostring(xml))
         return new_file_path
 
-    @keyword("Save XML Response File")
-    def save_xml_response_file(self, response, save_folder, response_name):
-        """ Save the webservice response as a XML file.
-
-            Returns the file path of the new Request file.
-
-            Example:
-                | ${response_file} | Save XML Response File |  ${response} | Response_file |
+    @keyword("Save XML To File")
+    def save_xml_to_file(self, etree_xml, save_folder, file_name):
         """
-        new_file_name = str(response_name) + ".xml"
-        new_file_path = os.path.join(save_folder, new_file_name)
-        request_file = open(new_file_path, 'wb')
-        # TODO Fix the encoding in the generated file
-        request_file.write(etree.tostring(response, pretty_print=True))
-        request_file.close()
+        Save the webservice response as a XML file.
+
+        Returns the file path of the newly created xml file.
+
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | etree_xml | etree object of the xml |
+        | save_folder | directory to save the new file |
+        | file_name | name of the new xml file without .xml |
+
+        *Example*:
+        | ${response_file}= | Save XML To File |  ${response} | ${CURDIR} | response_file_name |
+        """
+        new_file_path = self._save_to_file(save_folder, file_name,etree.tostring(etree_xml, pretty_print=True))
         return new_file_path
 
     @keyword("Convert XML Response to Dictionary")
-    def convert_response_dict(self, node):
-        """ Convert the webservice response into a dictionary.
+    def convert_response_dict(self, xml_etree):
+        """
+        Convert the webservice response into a dictionary.
 
-            Example:
-                | ${response} | Call SOAP Method With XML |  C:\\Request.xml |
-                | ${dict_response} | Convert XML Response to Dictionary | ${response} |
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | xml_etree | etree object of the xml to convert to dictionary |
+
+        *Example:*
+        | ${dict_response}= | Convert XML Response to Dictionary | ${response} |
         """
         result = {}
-        for element in node.iterchildren():
+        for element in xml_etree.iterchildren():
             # Remove namespace prefix
             key = element.tag.split('}')[1] if '}' in element.tag else element.tag
             # Process element as tree element if the inner XML contains non-whitespace content
@@ -159,10 +181,11 @@ class SoapLibrary:
 
     @staticmethod
     def _convert_xml_to_raw_text(xml_file_path):
-        """ Converts a xml file into a string.
+        """
+        Converts a xml file into a string.
 
-            :param xml_file_path: xml file path
-            :return: string with xml content
+        :param xml_file_path: xml file path
+        :return: string with xml content
         """
         file_content = open(xml_file_path, 'r')
         xml = ''
@@ -173,31 +196,66 @@ class SoapLibrary:
 
     @staticmethod
     def _parse_from_unicode(unicode_str):
-        """ Parses a unicode string
+        """
+        Parses a unicode string
         
-            :param unicode_str: unicode string
-            :return: parsed string
+        :param unicode_str: unicode string
+        :return: parsed string
         """
         utf8_parser = etree.XMLParser(encoding='utf-8')
         string_utf8 = unicode_str.encode('utf-8')
         return etree.fromstring(string_utf8, parser=utf8_parser)
 
-    @staticmethod
-    def _parse_xpath(xpath_list):
+    def _parse_xpath(self, tags):
+        """
+        Parses a single xpath or a list of xml tags
+
+        :param xpath_list: string for a single xml tag or list for multiple xml tags
+        :return:
+        """
         xpath = ''
-        if isinstance(xpath_list, list):
-            for el in xpath_list:
-                xpath += LOCAL_NAME_XPATH % el
+        if isinstance(tags, list):
+            for el in tags:
+                xpath += self._replace_xpath_by_local_name(el)
         else:
-            xpath += LOCAL_NAME_XPATH % xpath_list
+            xpath += self._replace_xpath_by_local_name(tags)
         return xpath
 
     @staticmethod
     def _convert_string_to_xml(xml_string):
-        """ Converts a given string to xml object using etree
-        
-            :param xml_string: string with xml content
-            :return: xml object
         """
-        xml = etree.fromstring(xml_string)
-        return xml
+        Converts a given string to xml object using etree.
+        
+        :param xml_string: string with xml content
+        :return: xml object
+        """
+        return etree.fromstring(xml_string)
+
+    @staticmethod
+    def _replace_xpath_by_local_name(xpath_tag):
+        """
+        Replaces the given xpath_tag in an xpath using name() function.
+        Returns the replaced xpath .
+
+        :param xpath_tag: tag to replace with in xpath
+        :return: replaced xpath tag
+        """
+        local_name_xpath = "//*[name()='%s']"
+        return local_name_xpath % xpath_tag
+
+    @staticmethod
+    def _save_to_file(save_folder, file_name, text):
+        """
+        Saves text into a new file.
+
+        :param save_folder: folder to save the new xml file
+        :param file_name: name of the new file
+        :param text: file text
+        :return new file path
+        """
+        new_file_name = "%s.xml" % file_name
+        new_file_path = os.path.join(save_folder, new_file_name)
+        request_file = open(new_file_path, 'wb')
+        request_file.write(text)
+        request_file.close()
+        return new_file_path
