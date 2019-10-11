@@ -55,5 +55,5 @@ Test Save File Response
     Remove File    ${CURDIR}${/}response_test.xml
     Create Soap Client    ${wsdl_ip_geo}
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
-    ${file}    Save XML Response File    ${response}    ${CURDIR}    response_test
+    ${file}    Save XML To File    ${response}    ${CURDIR}    response_test
     Should Exist    ${CURDIR}${/}response_test.xml
