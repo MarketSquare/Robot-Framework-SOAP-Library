@@ -24,33 +24,31 @@ Test read utf8
 Test Read tags with index
     Create Soap Client    ${wsdl_correios_price_calculator}
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_ListaServicos.xml
-    ${codigo}    Get Data From XML By Tag    ${response}    codigo    index=99
-    should be equal as integers    11835    ${codigo}
+    ${code}    Get Data From XML By Tag    ${response}    codigo    index=99
+    should be equal as integers    11835    ${code}
 
 Test Edit and Read
     Create Soap Client    ${wsdl_correios_price_calculator}
     ${dict}    Create Dictionary    tem:sCepDestino=80020000    tem:nVlPeso=4
     ${xml_edited}    Edit XML Request    ${requests_dir}${/}Request_CalcPrecoPrazo.xml    ${dict}    New_Request_CalcPrecoPrazo
     ${response}    Call SOAP Method With XML    ${xml_edited}
-    ${valor}    Get Data From XML By Tag    ${response}    ValorSemAdicionais
-    Log    ${valor}
-    should be equal    57,80    ${valor}
+    ${value}    Get Data From XML By Tag    ${response}    ValorSemAdicionais
+    should be equal    57,80    ${value}
 
 Test Response to Dict
     Create Soap Client    ${wsdl_correios_price_calculator}
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_CalcPrecoPrazo.xml
     ${dict_response}    Convert XML Response to Dictionary    ${response}
-    Log    ${dict_response}
     ${body}    Get From Dictionary    ${dict_response}    Body
     ${calcprecoprazoresponse}    Get From Dictionary    ${body}    CalcPrecoPrazoResponse
     ${calcprecoprazoresult}    Get From Dictionary    ${calcprecoprazoresponse}    CalcPrecoPrazoResult
     ${servicos}    Get From Dictionary    ${calcprecoprazoresult}    Servicos
     ${cservico}    Get From Dictionary    ${servicos}    cServico
     ${valorsemadicionais}    Get From Dictionary    ${cservico}    ValorSemAdicionais
-    Log    ${valorsemadicionais}
     should be equal    23,50    ${valorsemadicionais}
 
 Test Save File Response
     Create Soap Client    ${wsdl_ip_geo}
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
-    ${file}    Save XML Response File    ${response}    response_test
+    ${file}    Save XML To File    ${response}    ${requests_dir}    response_test
+
