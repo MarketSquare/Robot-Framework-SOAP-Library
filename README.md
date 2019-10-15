@@ -15,11 +15,10 @@ TODO `pip install`
 
     *** Test Cases ***
     Example
-        Create Soap Client    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
-        ${response}    Call SOAP Method With XML    ${CURDIR}/Request_CalcPrecoPrazo.xml
-        ${valor}    Get Data From XML By Tag    ${response}    ValorSemAdicionais
-        Log    ${valor}
-        should be equal    23,50    ${valor}
+        Create Soap Client    http://endpoint.com/example.asmx?wsdl
+        ${response}    Call SOAP Method With XML    ${CURDIR}/request.xml
+        ${text}    Get Data From XML By Tag    ${response}    tag_name
+        Log    ${text}
         
 ## Keyword Documentation
 
