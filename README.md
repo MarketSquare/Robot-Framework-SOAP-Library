@@ -19,6 +19,7 @@ TODO `pip install`
         ${response}    Call SOAP Method With XML    ${CURDIR}/request.xml
         ${text}    Get Data From XML By Tag    ${response}    tag_name
         Log    ${text}
+        Save XML To File    ${response}    ${CURDIR}    response_test
         
 ## Keyword Documentation
 
