@@ -27,6 +27,7 @@ Test Read tags with index
     ${codigo}    Get Data From XML By Tag    ${response}    codigo    index=99
     should be equal as integers    11835    ${codigo}
 
+# TODO change this test to a more stable webservice
 Test Edit and Read
     Remove File    ${requests_dir}${/}New_Request_CalcPrecoPrazo.xml
     Create Soap Client    ${wsdl_correios_price_calculator}
@@ -34,7 +35,7 @@ Test Edit and Read
     ${xml_edited}    Edit XML Request    ${requests_dir}${/}Request_CalcPrecoPrazo.xml    ${dict}    New_Request_CalcPrecoPrazo
     ${response}    Call SOAP Method With XML    ${xml_edited}
     ${valor}    Get Data From XML By Tag    ${response}    ValorSemAdicionais
-    should be equal    57,80    ${valor}
+    should be equal    61,30    ${valor}
     Should Exist    ${requests_dir}${/}New_Request_CalcPrecoPrazo.xml
 
 Test Response to Dict

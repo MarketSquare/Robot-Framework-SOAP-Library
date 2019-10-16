@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<keywordspec generated="20191016 14:21:05" type="library" name="SoapLibrary" format="ROBOT">
+<version>0.1</version>
+<scope>test suite</scope>
+<namedargs>yes</namedargs>
+<doc>    SoapLibrary is a library for testing SOAP-based web services.
+
+    SoapLibrary is based on [https://python-zeep.readthedocs.io/en/master/|Zeep], a modern SOAP client for Python.
+
+    This library is designed for those who want to work with webservice automation as if they were using SoapUI,
+    make a request through an XML file, and receive the response in another XML file.
+
+= Example =
+
+| ***** Settings *****
+| Library           SoapLibrary
+| Library           OperatingSystem
+|
+| ***** Test Cases *****
+| Example
+|     Create Soap Client    http://endpoint.com/example.asmx?wsdl
+|     ${response}    Call SOAP Method With XML    ${CURDIR}/request.xml
+|     ${text}    Get Data From XML By Tag    ${response}    tag_name
+|     Log    ${text}
+|     Save XML To File    ${response}    ${CURDIR}    response_test</doc>
+<kw name="Call SOAP Method With XML">
+<arguments>
+<arg>xml</arg>
+<arg>headers={'Content-Type': 'text/xml; charset=utf-8'}</arg>
+</arguments>
+<doc>Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument,
+the SOAP method is inside the XML file.
+
+*Input Arguments:*
+| *Name* | *Description* |
+| xml | file path to xml file |
+| headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
+
+*Example:*
+| ${response}= | Call SOAP Method With XML |  C:\Request.xml |</doc>
+<tags>
+</tags>
+</kw>
+<kw name="Convert XML Response to Dictionary">
+<arguments>
+<arg>xml_etree</arg>
+</arguments>
+<doc>Convert the webservice response into a dictionary.
+
+*Input Arguments:*
+| *Name* | *Description* |
+| xml_etree | etree object of the xml to convert to dictionary |
+
+*Example:*
+| ${dict_response}= | Convert XML Response to Dictionary | ${response} |</doc>
+<tags>
+</tags>
+</kw>
+<kw name="Create SOAP Client">
+<arguments>
+<arg>url</arg>
+</arguments>
+<doc>Loads a WSDL from the given URL and creates a Zeep client.
+List all Available operations/methods with INFO log level.
+
+*Input Arguments:*
+| *Name* | *Description* |
+| url | wsdl url |
+
+*Example:*
+| Create SOAP Client | Hostname?wsdl |</doc>
+<tags>
+</tags>
+</kw>
+<kw name="Edit XML Request">
+<arguments>
+<arg>xml_file_path</arg>
+<arg>new_values_dict</arg>
+<arg>edited_request_name</arg>
+</arguments>
+<doc>Changes a field on the given XML to a new given value, the values must be in a dictionary.
+xml_filepath must be a "template" of the request to the webservice.
+new_values_dict must be a dictionary with the keys and values to change.
+request_name will be the name of the new XMl file generated with the changed request.
+
+Returns the file path of the new Request file.
+
+*Input Arguments:*
+| *Name* | *Description* |
+| xml_file_path | file path to xml file |
+| new_values_dict | dictionary with tags as keys and tag value as value |
+| edited_request_name |  name of the new XMl file generated with the changed request |
+
+*Example*:
+| ${dict} | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
+| ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |</doc>
+<tags>
+</tags>
+</kw>
+<kw name="Get Data From XML By Tag">
+<arguments>
+<arg>xml</arg>
+<arg>tag</arg>
+<arg>index=1</arg>
+</arguments>
+<doc>Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning.
+The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.
+
+*Input Arguments:*
+| *Name* | *Description* |
+| xml | xml etree object |
+| tag | tag to get value from |
+| index | tag index if there are multiple tags with the same name, starting at 1. Default is set to 1 |
+
+*Examples:*
+| ${response}= | Call SOAP Method With XML |  C:\Request.xml |
+| Get Data From XML By Tag |  ${response} | SomeTag |
+| Get Data From XML By Tag |  ${response} | SomeTag | index=9 |</doc>
+<tags>
+</tags>
+</kw>
+<kw name="Save XML To File">
+<arguments>
+<arg>etree_xml</arg>
+<arg>save_folder</arg>
+<arg>file_name</arg>
+</arguments>
+<doc>Save the webservice response as a XML file.
+
+Returns the file path of the newly created xml file.
+
+*Input Arguments:*
+| *Name* | *Description* |
+| etree_xml | etree object of the xml |
+| save_folder | directory to save the new file |
+| file_name | name of the new xml file without .xml |
+
+*Example*:
+| ${response_file}= | Save XML To File |  ${response} | ${CURDIR} | response_file_name |</doc>
+<tags>
+</tags>
+</kw>
+</keywordspec>
