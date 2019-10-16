@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: robotframework-soaplibrary
-Version: 0.1
+Version: 0.2
 Summary: SOAP Library for Robot Framework
 Home-page: https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library
 Author: Altran Portugal
@@ -9,3 +9,4 @@ License: MIT License
 Description: Test library for Robot Framework to create automated test like using SOAPUI
 Platform: UNKNOWN
 Requires: robotframework
+Requires: zeep
