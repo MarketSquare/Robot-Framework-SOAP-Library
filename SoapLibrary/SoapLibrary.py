@@ -114,6 +114,7 @@ class SoapLibrary:
         | edited_request_name |  name of the new XMl file generated with the changed request |
 
         *Example*:
+        | ${dict} | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
         | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |
         """
         string_xml = self._convert_xml_to_raw_text(xml_file_path)
