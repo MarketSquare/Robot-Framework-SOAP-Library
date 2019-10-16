@@ -4,6 +4,10 @@ SOAP Library for Robot Framework
 ## Introduction
 The SoapLibrary was created for those who want to use the Robot Framework as if they were using SoapUI, just send the request XML and get the response XML.
 
+![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/SoapUI.png)
+
+![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/SoapLibrary.png)
+
 ## Instalation
 TODO `pip install`
 
