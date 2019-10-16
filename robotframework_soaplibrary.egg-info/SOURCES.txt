@@ -1,0 +1,11 @@
+README.md
+setup.cfg
+setup.py
+SoapLibrary/SoapLibrary.py
+SoapLibrary/__init__.py
+SoapLibrary/config.py
+SoapLibrary/version.py
+robotframework_soaplibrary.egg-info/PKG-INFO
+robotframework_soaplibrary.egg-info/SOURCES.txt
+robotframework_soaplibrary.egg-info/dependency_links.txt
+robotframework_soaplibrary.egg-info/top_level.txt
