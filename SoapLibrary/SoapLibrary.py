@@ -180,6 +180,24 @@ class SoapLibrary:
                 result[key] = value
         return result
 
+    @keyword("Call SOAP Method")
+    def call_soap_method(self, name, *args):
+        """
+        If the webservice have simple SOAP method with few arguments, you can call the method with the given
+        `name` and `args`
+
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | name | Name of the SOAP operation/method |
+        | args | List of request entries |
+
+        *Example:*
+        | ${response}= | Call SOAP Method | method_name | arg1 | arg2 |
+        """
+        method = getattr(self.client.service, name)
+        response = method(*args)
+        return response
+
     @staticmethod
     def _convert_xml_to_raw_text(xml_file_path):
         """
