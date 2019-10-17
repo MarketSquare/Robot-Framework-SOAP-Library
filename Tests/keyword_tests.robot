@@ -1,5 +1,5 @@
 *** Settings ***
-Library           ../SoapLibrary/
+Library           SoapLibrary
 Library           Collections
 Library           OperatingSystem
 
@@ -43,7 +43,7 @@ Test Response to Dict
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_CalcPrecoPrazo.xml
     ${dict_response}    Convert XML Response to Dictionary    ${response}
     ${type}    evaluate    str(type(${dict_response}))
-    should be equal    <type 'dict'>    ${type}
+    Should Contain    ${type}    'dict'
     ${body}    Get From Dictionary    ${dict_response}    Body
     ${calcprecoprazoresponse}    Get From Dictionary    ${body}    CalcPrecoPrazoResponse
     ${calcprecoprazoresult}    Get From Dictionary    ${calcprecoprazoresponse}    CalcPrecoPrazoResult
