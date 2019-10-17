@@ -23,5 +23,5 @@ setup(name         		= 'robotframework-soaplibrary',
       url          		= 'https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library',
       packages     		= ['SoapLibrary'],
       package_data 		= {'SoapLibrary': []},
-      requires     		= ['robotframework', 'zeep']
+      requires     		= ['robotframework', 'zeep', 'six', 'requests']
       )

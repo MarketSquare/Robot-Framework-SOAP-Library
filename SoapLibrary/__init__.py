@@ -1,5 +1,5 @@
-from version import VERSION
-from SoapLibrary import SoapLibrary
+from .version import VERSION
+from .SoapLibrary import SoapLibrary
 
 
 class SoapLibrary(SoapLibrary):
