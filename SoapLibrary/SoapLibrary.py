@@ -9,7 +9,6 @@ from robot.api import logger
 from robot.api.deco import keyword
 from six import iteritems
 
-
 logging.config.dictConfig(DICT_CONFIG)
 
 DEFAULT_HEADERS = {'Content-Type': 'text/xml; charset=utf-8'}
@@ -148,7 +147,7 @@ class SoapLibrary:
         *Example*:
         | ${response_file}= | Save XML To File |  ${response} | ${CURDIR} | response_file_name |
         """
-        new_file_path = self._save_to_file(save_folder, file_name,etree.tostring(etree_xml, pretty_print=True))
+        new_file_path = self._save_to_file(save_folder, file_name, etree.tostring(etree_xml, pretty_print=True))
         return new_file_path
 
     @keyword("Convert XML Response to Dictionary")
@@ -231,7 +230,7 @@ class SoapLibrary:
         """
         Parses a single xpath or a list of xml tags
 
-        :param xpath_list: string for a single xml tag or list for multiple xml tags
+        :param tags: string for a single xml tag or list for multiple xml tags
         :return:
         """
         xpath = ''
