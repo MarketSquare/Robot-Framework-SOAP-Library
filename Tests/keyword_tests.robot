@@ -1,5 +1,5 @@
 *** Settings ***
-Library           SoapLibrary
+Library           ../SoapLibrary/
 Library           Collections
 Library           OperatingSystem
 
