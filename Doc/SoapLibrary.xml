@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec generated="20191016 14:21:05" type="library" name="SoapLibrary" format="ROBOT">
-<version>0.1</version>
+<keywordspec generated="20191017 11:16:02" type="library" name="SoapLibrary" format="ROBOT">
+<version>0.3</version>
 <scope>test suite</scope>
 <namedargs>yes</namedargs>
 <doc>    SoapLibrary is a library for testing SOAP-based web services.
@@ -23,6 +23,24 @@
 |     ${text}    Get Data From XML By Tag    ${response}    tag_name
 |     Log    ${text}
 |     Save XML To File    ${response}    ${CURDIR}    response_test</doc>
+<kw name="Call SOAP Method">
+<arguments>
+<arg>name</arg>
+<arg>*args</arg>
+</arguments>
+<doc>If the webservice have simple SOAP method with few arguments, you can call the method with the given
+`name` and `args`
+
+*Input Arguments:*
+| *Name* | *Description* |
+| name | Name of the SOAP operation/method |
+| args | List of request entries |
+
+*Example:*
+| ${response}= | Call SOAP Method | method_name | arg1 | arg2 |</doc>
+<tags>
+</tags>
+</kw>
 <kw name="Call SOAP Method With XML">
 <arguments>
 <arg>xml</arg>
