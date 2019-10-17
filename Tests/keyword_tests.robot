@@ -58,3 +58,8 @@ Test Save File Response
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
     ${file}    Save XML To File    ${response}    ${CURDIR}    response_test
     Should Exist    ${CURDIR}${/}response_test.xml
+
+Test Call Soap Method
+    Create Soap Client    ${wsdl_calculator}
+    ${response}    Call SOAP Method    Add    2    1
+    should be equal as integers    3    ${response}
