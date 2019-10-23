@@ -1,5 +1,7 @@
 import os
 import logging.config
+import warnings
+import base64
 from .config import DICT_CONFIG
 from requests import Session
 from zeep import Client
@@ -8,8 +10,12 @@ from zeep.wsdl.utils import etree
 from robot.api import logger
 from robot.api.deco import keyword
 from six import iteritems
+from urllib3.exceptions import InsecureRequestWarning
 
 logging.config.dictConfig(DICT_CONFIG)
+# hide warnings
+warnings.simplefilter("ignore", InsecureRequestWarning)
+logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 DEFAULT_HEADERS = {'Content-Type': 'text/xml; charset=utf-8'}
 
@@ -20,7 +26,7 @@ class SoapLibrary:
         self.url = None
 
     @keyword("Create SOAP Client")
-    def create_soap_client(self, url):
+    def create_soap_client(self, url, ssl_verify=True):
         """
         Loads a WSDL from the given URL and creates a Zeep client.
         List all Available operations/methods with INFO log level.
@@ -34,6 +40,7 @@ class SoapLibrary:
         """
         self.url = url
         session = Session()
+        session.verify = ssl_verify
         self.client = Client(self.url, transport=Transport(session=session))
         logger.info('Connected to: %s' % self.client.wsdl.location)
         info = self.client.service.__dict__
@@ -95,7 +102,7 @@ class SoapLibrary:
             logger.warn('The search "%s" did not return any result! Please confirm the tag!' % xpath)
         elif len(data_list) > 1:
             logger.warn('The tag you entered found %s items, returning the text in the index '
-                        'number %s, if you want a different index inform the argument index=N' % (len(data_list), new_index))
+                        'number %s, if you want a different index inform the argument index=N' % (len(data_list), index))
         return data_list[new_index].text
 
     @keyword("Edit XML Request")
@@ -185,7 +192,7 @@ class SoapLibrary:
     def call_soap_method(self, name, *args):
         """
         If the webservice have simple SOAP method with few arguments, you can call the method with the given
-        `name` and `args`
+        `name` and `args`.
 
         *Input Arguments:*
         | *Name* | *Description* |
@@ -198,6 +205,21 @@ class SoapLibrary:
         method = getattr(self.client.service, name)
         response = method(*args)
         return response
+
+    @keyword("Decode Base64")
+    def decode_base64(self, response):
+        """
+        Decodes texts that are base64 encoded.
+
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | response | Response of the webservice coded in base64 |
+
+        *Example:*
+        | ${response_decoded}= | Decode Base64 | ${response} |
+        """
+        response_decode = base64.b64decode(response)
+        return response_decode.decode('utf-8', 'ignore')
 
     @staticmethod
     def _convert_xml_to_raw_text(xml_file_path):
@@ -217,7 +239,7 @@ class SoapLibrary:
     @staticmethod
     def _parse_from_unicode(unicode_str):
         """
-        Parses a unicode string
+        Parses a unicode string.
         
         :param unicode_str: unicode string
         :return: parsed string
@@ -228,7 +250,7 @@ class SoapLibrary:
 
     def _parse_xpath(self, tags):
         """
-        Parses a single xpath or a list of xml tags
+        Parses a single xpath or a list of xml tags.
 
         :param tags: string for a single xml tag or list for multiple xml tags
         :return:
@@ -255,7 +277,7 @@ class SoapLibrary:
     def _replace_xpath_by_local_name(xpath_tag):
         """
         Replaces the given xpath_tag in an xpath using name() function.
-        Returns the replaced xpath .
+        Returns the replaced xpath.
 
         :param xpath_tag: tag to replace with in xpath
         :return: replaced xpath tag

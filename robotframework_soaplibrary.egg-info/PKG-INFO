@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: robotframework-soaplibrary
-Version: 0.3
+Version: 0.4
 Summary: SOAP Library for Robot Framework
 Home-page: https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library
 Author: Altran Portugal
@@ -12,3 +12,4 @@ Requires: robotframework
 Requires: zeep
 Requires: six
 Requires: requests
+Requires: urllib3
