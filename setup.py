@@ -14,7 +14,7 @@ with open(version_file) as file:
     exec(code)
 
 setup(name         		= 'robotframework-soaplibrary',
-      version      		= '0.3',
+      version      		= '0.4',
       description  		= 'SOAP Library for Robot Framework',
 	  long_description	= 'Test library for Robot Framework to create automated test like using SOAPUI',
       author       		= 'Altran Portugal',
@@ -23,5 +23,5 @@ setup(name         		= 'robotframework-soaplibrary',
       url          		= 'https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library',
       packages     		= ['SoapLibrary'],
       package_data 		= {'SoapLibrary': []},
-      requires     		= ['robotframework', 'zeep', 'six', 'requests']
+      requires     		= ['robotframework', 'zeep', 'six', 'requests', 'urllib3']
       )
