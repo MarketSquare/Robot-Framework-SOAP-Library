@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec generated="20191017 14:41:30" type="library" name="SoapLibrary" format="ROBOT">
-<version>0.3</version>
+<keywordspec generated="20191023 15:30:54" type="library" name="SoapLibrary" format="ROBOT">
+<version>0.4</version>
 <scope>test suite</scope>
 <namedargs>yes</namedargs>
 <doc>    SoapLibrary is a library for testing SOAP-based web services.
@@ -29,7 +29,7 @@
 <arg>*args</arg>
 </arguments>
 <doc>If the webservice have simple SOAP method with few arguments, you can call the method with the given
-`name` and `args`
+`name` and `args`.
 
 *Input Arguments:*
 | *Name* | *Description* |
@@ -77,6 +77,7 @@ the SOAP method is inside the XML file.
 <kw name="Create SOAP Client">
 <arguments>
 <arg>url</arg>
+<arg>ssl_verify=True</arg>
 </arguments>
 <doc>Loads a WSDL from the given URL and creates a Zeep client.
 List all Available operations/methods with INFO log level.
@@ -87,6 +88,21 @@ List all Available operations/methods with INFO log level.
 
 *Example:*
 | Create SOAP Client | Hostname?wsdl |</doc>
+<tags>
+</tags>
+</kw>
+<kw name="Decode Base64">
+<arguments>
+<arg>response</arg>
+</arguments>
+<doc>Decodes texts that are base64 encoded.
+
+*Input Arguments:*
+| *Name* | *Description* |
+| response | Response of the webservice coded in base64 |
+
+*Example:*
+| ${response_decoded}= | Decode Base64 | ${response} |</doc>
 <tags>
 </tags>
 </kw>
