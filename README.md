@@ -11,7 +11,7 @@ The SoapLibrary was created for those who want to use the Robot Framework as if 
 
 ![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/img_SoapUI.png)
 
-![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/img_SoapLibrary.png)
+![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/img2_SoapLibrary.png)
 
 ## Instalation
 These packages are prerequisites for the library:  
