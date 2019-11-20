@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec generated="20191023 15:30:54" type="library" name="SoapLibrary" format="ROBOT">
+<keywordspec generated="20191120 13:35:03" type="library" name="SoapLibrary" format="ROBOT">
 <version>0.4</version>
 <scope>test suite</scope>
 <namedargs>yes</namedargs>
@@ -28,8 +28,10 @@
 <arg>name</arg>
 <arg>*args</arg>
 </arguments>
-<doc>If the webservice have simple SOAP method with few arguments, you can call the method with the given
+<doc>If the webservice have simple SOAP operation/method with few arguments, you can call the method with the given
 `name` and `args`.
+
+The first argument of the keyword  ``name``  is the operation name of the ``SOAP operation/method`` [https://www.soapui.org/soap-and-wsdl/operations-and-requests.html|More information here]
 
 *Input Arguments:*
 | *Name* | *Description* |
@@ -37,7 +39,7 @@
 | args | List of request entries |
 
 *Example:*
-| ${response}= | Call SOAP Method | method_name | arg1 | arg2 |</doc>
+| ${response}= | Call SOAP Method | operation_name | arg1 | arg2 |</doc>
 <tags>
 </tags>
 </kw>
@@ -87,7 +89,7 @@ List all Available operations/methods with INFO log level.
 | url | wsdl url |
 
 *Example:*
-| Create SOAP Client | Hostname?wsdl |</doc>
+| Create SOAP Client | http://endpoint.com?wsdl |</doc>
 <tags>
 </tags>
 </kw>
@@ -96,6 +98,8 @@ List all Available operations/methods with INFO log level.
 <arg>response</arg>
 </arguments>
 <doc>Decodes texts that are base64 encoded.
+
+Returns the decoded response
 
 *Input Arguments:*
 | *Name* | *Description* |
@@ -126,7 +130,7 @@ Returns the file path of the new Request file.
 | edited_request_name |  name of the new XMl file generated with the changed request |
 
 *Example*:
-| ${dict} | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
+| ${dict}= | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
 | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |</doc>
 <tags>
 </tags>
@@ -140,6 +144,8 @@ Returns the file path of the new Request file.
 <doc>Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning.
 The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.
 
+Returns the string representation of the value.
+
 *Input Arguments:*
 | *Name* | *Description* |
 | xml | xml etree object |
@@ -148,8 +154,8 @@ The xml argument must be an etree object, can be used with the return of the key
 
 *Examples:*
 | ${response}= | Call SOAP Method With XML |  C:\Request.xml |
-| Get Data From XML By Tag |  ${response} | SomeTag |
-| Get Data From XML By Tag |  ${response} | SomeTag | index=9 |</doc>
+| ${value}= | Get Data From XML By Tag |  ${response} | SomeTag |
+| ${value}= | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |</doc>
 <tags>
 </tags>
 </kw>
