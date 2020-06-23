@@ -171,6 +171,7 @@ class SoapLibrary:
         *Example:*
         | ${dict_response}= | Convert XML Response to Dictionary | ${response} |
         """
+        # Thanks Jamie Murphy for this code: https://gist.github.com/jacobian/795571
         result = {}
         for element in xml_etree.iterchildren():
             # Remove namespace prefix
