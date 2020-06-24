@@ -113,7 +113,9 @@ class SoapLibrary:
         Changes a field on the given XML to a new given value, the values must be in a dictionary.
         xml_filepath must be a "template" of the request to the webservice.
         new_values_dict must be a dictionary with the keys and values to change.
-        request_name will be the name of the new XMl file generated with the changed request.
+        request_name will be the name of the new XMl file generated with the changed request.\n
+
+        If there is a key that appears more than once, all occurrences will be replaced by the new value.
 
         Returns the file path of the new Request file.
 
@@ -135,7 +137,9 @@ class SoapLibrary:
             if len(xml.xpath(self._replace_xpath_by_local_name(key))) == 0:
                 logger.warn('Tag "%s" not found' % key)
                 continue
-            xml.xpath(self._replace_xpath_by_local_name(key))[0].text = value
+            count = int(xml.xpath(("count(%s)" % self._replace_xpath_by_local_name(key))))
+            for i in range(count):
+                xml.xpath(self._replace_xpath_by_local_name(key))[i].text = value
         # Create new file with replaced request
         new_file_path = self._save_to_file(os.path.dirname(xml_file_path), edited_request_name, etree.tostring(xml))
         return new_file_path
