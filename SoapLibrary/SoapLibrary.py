@@ -137,9 +137,11 @@ class SoapLibrary:
             if len(xml.xpath(self._replace_xpath_by_local_name(key))) == 0:
                 logger.warn('Tag "%s" not found' % key)
                 continue
-            count = int(xml.xpath(("count(%s)" % self._replace_xpath_by_local_name(key))))
+            xml_xpath = self._replace_xpath_by_local_name(key)
+            count = int(xml.xpath(("count(%s)" % xml_xpath)))
+            logger.debug("Found %s tags with xpath %s" % (str(count), xml_xpath))
             for i in range(count):
-                xml.xpath(self._replace_xpath_by_local_name(key))[i].text = value
+                xml.xpath(xml_xpath)[i].text = value
         # Create new file with replaced request
         new_file_path = self._save_to_file(os.path.dirname(xml_file_path), edited_request_name, etree.tostring(xml))
         return new_file_path
