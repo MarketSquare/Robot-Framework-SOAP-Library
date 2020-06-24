@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec generated="20191120 13:35:03" type="library" name="SoapLibrary" format="ROBOT">
+<keywordspec name="SoapLibrary" type="library" format="ROBOT" generated="20200624 16:45:59">
 <version>0.4</version>
 <scope>test suite</scope>
 <namedargs>yes</namedargs>
@@ -120,6 +120,9 @@ Returns the decoded response
 xml_filepath must be a "template" of the request to the webservice.
 new_values_dict must be a dictionary with the keys and values to change.
 request_name will be the name of the new XMl file generated with the changed request.
+
+
+If there is a key that appears more than once, all occurrences will be replaced by the new value.
 
 Returns the file path of the new Request file.
 
