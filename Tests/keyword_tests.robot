@@ -2,6 +2,7 @@
 Library           ../SoapLibrary/
 Library           Collections
 Library           OperatingSystem
+Library           XML    use_lxml=True
 
 *** Variables ***
 ${requests_dir}                      ${CURDIR}${/}Requests
@@ -63,3 +64,155 @@ Test Call Soap Method
     Create Soap Client    ${wsdl_calculator}
     ${response}    Call SOAP Method    Add    2    1
     should be equal as integers    3    ${response}
+
+Test Edit XML Request 1
+    [Documentation]    Change all names, dates and reasons tags
+    ${new_value_dict}    Create Dictionary    startDate=15-01-2020    name=Joaquim    Reason=1515
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}request.xml    ${new_value_dict}    New_Request    repeated_tags=0
+    ${new_value_dict}    Create Dictionary    startDate=16-01-2020    name2=Joao    Reason=1616
+    ${xml_edited}    Edit XML Request    ${xml_edited}    ${new_value_dict}    New_Request    repeated_tags=1
+    ${new_value_dict}    Create Dictionary    startDate=17-01-2020    Reason=1717
+    ${xml_edited}    Edit XML Request    ${xml_edited}    ${new_value_dict}    New_Request    repeated_tags=2
+    ${data}    Parse XML    ${requests_dir}${/}New_Request.xml    keep_clark_notation=True
+    ${text_name}    Evaluate Xpath    ${data}    //name
+    Should be equal    ${text_name[0].text}    Joaquim
+    ${text_name2}    Evaluate Xpath    ${data}    //name2
+    Should be equal    ${text_name2[0].text}    Joao
+    ${text_date}    Evaluate Xpath    ${data}    //startDate
+    Should be equal    ${text_date[0].text}    15-01-2020
+    Should be equal    ${text_date[1].text}    16-01-2020
+    Should be equal    ${text_date[2].text}    17-01-2020
+    ${text_reason}    Evaluate Xpath    ${data}    //Reason
+    Should be equal    ${text_reason[0].text}    1515
+    Should be equal    ${text_reason[1].text}    1616
+    Should be equal    ${text_reason[2].text}    1717
+
+Test Edit XML Request 2
+    [Documentation]    Change name, date and reason on tag 0
+    ${new_value_dict}    Create Dictionary    startDate=20-01-2020    name=Maria    Reason=2020
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}request.xml    ${new_value_dict}    New_Request    repeated_tags=0
+    ${data}    Parse XML    ${requests_dir}${/}New_Request.xml    keep_clark_notation=True
+    ${text_name}    Evaluate Xpath    ${data}    //name
+    Should be equal    ${text_name[0].text}    Maria
+    ${text_name2}    Evaluate Xpath    ${data}    //name2
+    Should be equal    ${text_name2[0].text}    BBBB
+    ${text_date}    Evaluate Xpath    ${data}    //startDate
+    Should be equal    ${text_date[0].text}    20-01-2020
+    Should be equal    ${text_date[1].text}    2019-06-03
+    Should be equal    ${text_date[2].text}    2019-06-03
+    ${text_reason}    Evaluate Xpath    ${data}    //Reason
+    Should be equal    ${text_reason[0].text}    2020
+    Should be equal    ${text_reason[1].text}    0000
+    Should be equal    ${text_reason[2].text}    0000
+
+Test Edit XML Request 3
+    [Documentation]    Change name2, date and reason on tag 1
+    ${new_value_dict}    Create Dictionary    startDate=22-01-2020    name2=Joana    Reason=2222
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}request.xml    ${new_value_dict}    New_Request    repeated_tags=1
+    ${data}    Parse XML    ${requests_dir}${/}New_Request.xml    keep_clark_notation=True
+    ${text_name}    Evaluate Xpath    ${data}    //name
+    Should be equal    ${text_name[0].text}    AAAAA
+    ${text_name2}    Evaluate Xpath    ${data}    //name2
+    Should be equal    ${text_name2[0].text}    Joana
+    ${text_date}    Evaluate Xpath    ${data}    //startDate
+    Should be equal    ${text_date[0].text}    2019-06-03
+    Should be equal    ${text_date[1].text}    22-01-2020
+    Should be equal    ${text_date[2].text}    2019-06-03
+    ${text_reason}    Evaluate Xpath    ${data}    //Reason
+    Should be equal    ${text_reason[0].text}    0000
+    Should be equal    ${text_reason[1].text}    2222
+    Should be equal    ${text_reason[2].text}    0000
+
+Test Edit XML Request 4
+    [Documentation]    Change date and Reason on tag 2
+    ${new_value_dict}    Create Dictionary    startDate=25-01-2020    Reason=2525
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}request.xml    ${new_value_dict}    New_Request    repeated_tags=2
+    ${data}    Parse XML    ${requests_dir}${/}New_Request.xml    keep_clark_notation=True
+    ${text_name}    Evaluate Xpath    ${data}    //name
+    Should be equal    ${text_name[0].text}    AAAAA
+    ${text_name2}    Evaluate Xpath    ${data}    //name2
+    Should be equal    ${text_name2[0].text}    BBBB
+    ${text_date}    Evaluate Xpath    ${data}    //startDate
+    Should be equal    ${text_date[0].text}    2019-06-03
+    Should be equal    ${text_date[1].text}    2019-06-03
+    Should be equal    ${text_date[2].text}    25-01-2020
+    ${text_reason}    Evaluate Xpath    ${data}    //Reason
+    Should be equal    ${text_reason[0].text}    0000
+    Should be equal    ${text_reason[1].text}    0000
+    Should be equal    ${text_reason[2].text}    2525
+
+Test Edit XML Request 5
+    [Documentation]    Change name, date and reason in Tags 0 and 1
+    ${new_value_dict}    Create Dictionary    startDate=15-01-2020    name=Joaquim    Reason=1515
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}request.xml    ${new_value_dict}    New_Request    repeated_tags=0
+    ${new_value_dict}    Create Dictionary    startDate=16-01-2020    name2=Joao    Reason=1616
+    ${xml_edited}    Edit XML Request    ${xml_edited}    ${new_value_dict}    New_Request    repeated_tags=1
+    ${data}    Parse XML    ${requests_dir}${/}New_Request.xml    keep_clark_notation=True
+    ${text_name}    Evaluate Xpath    ${data}    //name
+    Should be equal    ${text_name[0].text}    Joaquim
+    ${text_name2}    Evaluate Xpath    ${data}    //name2
+    Should be equal    ${text_name2[0].text}    Joao
+    ${text_date}    Evaluate Xpath    ${data}    //startDate
+    Should be equal    ${text_date[0].text}    15-01-2020
+    Should be equal    ${text_date[1].text}    16-01-2020
+    Should be equal    ${text_date[2].text}    2019-06-03
+    ${text_reason}    Evaluate Xpath    ${data}    //Reason
+    Should be equal    ${text_reason[0].text}    1515
+    Should be equal    ${text_reason[1].text}    1616
+    Should be equal    ${text_reason[2].text}    0000
+
+Test Edit XML Request 6
+    [Documentation]    Change name, date and reason in Tags 1 and 2
+    ${new_value_dict}    Create Dictionary    startDate=15-01-2020    name2=Joaquim    Reason=1515
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}request.xml    ${new_value_dict}    New_Request    repeated_tags=1
+    ${new_value_dict}    Create Dictionary    startDate=16-01-2020    Reason=1616
+    ${xml_edited}    Edit XML Request    ${xml_edited}    ${new_value_dict}    New_Request    repeated_tags=2
+    ${data}    Parse XML    ${requests_dir}${/}New_Request.xml    keep_clark_notation=True
+    ${text_name}    Evaluate Xpath    ${data}    //name
+    Should be equal    ${text_name[0].text}    AAAAA
+    ${text_name2}    Evaluate Xpath    ${data}    //name2
+    Should be equal    ${text_name2[0].text}    Joaquim
+    ${text_date}    Evaluate Xpath    ${data}    //startDate
+    Should be equal    ${text_date[0].text}    2019-06-03
+    Should be equal    ${text_date[1].text}    15-01-2020
+    Should be equal    ${text_date[2].text}    16-01-2020
+    ${text_reason}    Evaluate Xpath    ${data}    //Reason
+    Should be equal    ${text_reason[0].text}    0000
+    Should be equal    ${text_reason[1].text}    1515
+    Should be equal    ${text_reason[2].text}    1616
+
+Test Edit XML Request 7
+    [Documentation]    Change only the name tag
+    ${new_value_dict}    Create Dictionary    name=Carlota
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}request.xml    ${new_value_dict}    New_Request
+    ${data}    Parse XML    ${requests_dir}${/}New_Request.xml    keep_clark_notation=True
+    ${text_name}    Evaluate Xpath    ${data}    //name
+    Should be equal    ${text_name[0].text}    Carlota
+    ${text_name2}    Evaluate Xpath    ${data}    //name2
+    Should be equal    ${text_name2[0].text}    BBBB
+    ${text_date}    Evaluate Xpath    ${data}    //startDate
+    Should be equal    ${text_date[0].text}    2019-06-03
+    Should be equal    ${text_date[1].text}    2019-06-03
+    Should be equal    ${text_date[2].text}    2019-06-03
+    ${text_reason}    Evaluate Xpath    ${data}    //Reason
+    Should be equal    ${text_reason[0].text}    0000
+    Should be equal    ${text_reason[1].text}    0000
+    Should be equal    ${text_reason[2].text}    0000
+
+Test Edit XML Request 8
+    [Documentation]    Change all dates tags
+    ${new_value_dict}    Create Dictionary    startDate=07-06-2020
+    ${xml_edited}    Edit XML Request    ${requests_dir}${/}request.xml    ${new_value_dict}    New_Request
+    ${data}    Parse XML    ${requests_dir}${/}New_Request.xml    keep_clark_notation=True
+    ${text_name}    Evaluate Xpath    ${data}    //name
+    Should be equal    ${text_name[0].text}    AAAAA
+    ${text_name2}    Evaluate Xpath    ${data}    //name2
+    Should be equal    ${text_name2[0].text}    BBBB
+    ${text_date}    Evaluate Xpath    ${data}    //startDate
+    Should be equal    ${text_date[0].text}    07-06-2020
+    Should be equal    ${text_date[1].text}    07-06-2020
+    Should be equal    ${text_date[2].text}    07-06-2020
+    ${text_reason}    Evaluate Xpath    ${data}    //Reason
+    Should be equal    ${text_reason[0].text}    0000
+    Should be equal    ${text_reason[1].text}    0000
+    Should be equal    ${text_reason[2].text}    0000
