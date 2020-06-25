@@ -125,6 +125,7 @@ class SoapLibrary:
         | xml_file_path | file path to xml file |
         | new_values_dict | dictionary with tags as keys and tag value as value |
         | edited_request_name |  name of the new XMl file generated with the changed request |
+        | repeated_tags |  Occurrence number of the repeated tag to change value |
 
         *Example*:
         | ${dict}= | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
