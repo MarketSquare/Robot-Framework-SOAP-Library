@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec generated="20191120 13:35:03" type="library" name="SoapLibrary" format="ROBOT">
-<version>0.4</version>
+<keywordspec name="SoapLibrary" type="library" format="ROBOT" generated="20200625 14:30:55">
+<version>0.5</version>
 <scope>test suite</scope>
 <namedargs>yes</namedargs>
 <doc>    SoapLibrary is a library for testing SOAP-based web services.
@@ -115,11 +115,16 @@ Returns the decoded response
 <arg>xml_file_path</arg>
 <arg>new_values_dict</arg>
 <arg>edited_request_name</arg>
+<arg>repeated_tags=All</arg>
 </arguments>
 <doc>Changes a field on the given XML to a new given value, the values must be in a dictionary.
 xml_filepath must be a "template" of the request to the webservice.
 new_values_dict must be a dictionary with the keys and values to change.
 request_name will be the name of the new XMl file generated with the changed request.
+
+
+If there is a tag that appears more than once, all occurrences will be replaced by the new value by defaul.
+If you want to change a specific tag, inform the occurrence number in the repeated_tags argument.
 
 Returns the file path of the new Request file.
 
@@ -131,7 +136,8 @@ Returns the file path of the new Request file.
 
 *Example*:
 | ${dict}= | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
-| ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |</doc>
+| ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |
+| ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request | repeated_tags=0 |</doc>
 <tags>
 </tags>
 </kw>

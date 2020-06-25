@@ -108,12 +108,15 @@ class SoapLibrary:
         return data_list[new_index].text
 
     @keyword("Edit XML Request")
-    def edit_xml(self, xml_file_path, new_values_dict, edited_request_name):
+    def edit_xml(self, xml_file_path, new_values_dict, edited_request_name, repeated_tags='All'):
         """
         Changes a field on the given XML to a new given value, the values must be in a dictionary.
         xml_filepath must be a "template" of the request to the webservice.
         new_values_dict must be a dictionary with the keys and values to change.
-        request_name will be the name of the new XMl file generated with the changed request.
+        request_name will be the name of the new XMl file generated with the changed request.\n
+
+        If there is a tag that appears more than once, all occurrences will be replaced by the new value by defaul.
+        If you want to change a specific tag, inform the occurrence number in the repeated_tags argument.
 
         Returns the file path of the new Request file.
 
@@ -122,10 +125,12 @@ class SoapLibrary:
         | xml_file_path | file path to xml file |
         | new_values_dict | dictionary with tags as keys and tag value as value |
         | edited_request_name |  name of the new XMl file generated with the changed request |
+        | repeated_tags |  Occurrence number of the repeated tag to change value |
 
         *Example*:
         | ${dict}= | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
         | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |
+        | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request | repeated_tags=0 |
         """
         string_xml = self._convert_xml_to_raw_text(xml_file_path)
         xml = self._convert_string_to_xml(string_xml)
@@ -135,7 +140,14 @@ class SoapLibrary:
             if len(xml.xpath(self._replace_xpath_by_local_name(key))) == 0:
                 logger.warn('Tag "%s" not found' % key)
                 continue
-            xml.xpath(self._replace_xpath_by_local_name(key))[0].text = value
+            xml_xpath = self._replace_xpath_by_local_name(key)
+            count = int(xml.xpath(("count(%s)" % xml_xpath)))
+            logger.debug("Found %s tags with xpath %s" % (str(count), xml_xpath))
+            if repeated_tags == 'All' or count < 2:
+                for i in range(count):
+                    xml.xpath(xml_xpath)[i].text = value
+            else:
+                xml.xpath(xml_xpath)[int(repeated_tags)].text = value
         # Create new file with replaced request
         new_file_path = self._save_to_file(os.path.dirname(xml_file_path), edited_request_name, etree.tostring(xml))
         return new_file_path
