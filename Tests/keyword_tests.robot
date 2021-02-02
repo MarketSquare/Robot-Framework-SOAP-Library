@@ -17,6 +17,14 @@ Test read
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 
+Test read by xml string
+    Create Soap Client    ${wsdl_calculator}
+    ${xml} =  Parse XML  ${requests_dir}${/}Request_Calculator.xml
+    ${xml_str} =  Element To String  ${xml}
+    ${response}    Call SOAP Method With XML  ${xml_str}
+    ${result}    Get Data From XML By Tag    ${response}    AddResult
+    should be equal    8    ${result}
+
 Test read utf8
     Create Soap Client    ${wsdl_ip_geo}
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml

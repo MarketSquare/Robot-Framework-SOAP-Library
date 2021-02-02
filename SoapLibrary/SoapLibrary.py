@@ -62,7 +62,10 @@ class SoapLibrary:
         | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
-        raw_text_xml = self._convert_xml_to_raw_text(xml)
+        if str(xml).find("<") != -1:
+            raw_text_xml = str(xml)
+        else:
+            raw_text_xml = self._convert_xml_to_raw_text(xml)
         xml_obj = etree.fromstring(raw_text_xml)
         response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
         etree_response = self._parse_from_unicode(response.text)
