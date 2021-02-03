@@ -9,6 +9,7 @@ ${requests_dir}                      ${CURDIR}${/}Requests
 ${wsdl_correios_price_calculator}    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
 ${wsdl_ip_geo}                       http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl
 ${wsdl_calculator}                   http://www.dneonline.com/calculator.asmx?wsdl
+${request_string}                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/"><soapenv:Header/><soapenv:Body><tem:Add><tem:intA>3</tem:intA><tem:intB>5</tem:intB></tem:Add></soapenv:Body></soapenv:Envelope>
 
 *** Test Cases ***
 Test read
@@ -17,11 +18,9 @@ Test read
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 
-Test read by xml string
+Test read string xml
     Create Soap Client    ${wsdl_calculator}
-    ${xml} =  Parse XML  ${requests_dir}${/}Request_Calculator.xml
-    ${xml_str} =  Element To String  ${xml}
-    ${response}    Call SOAP Method With XML  ${xml_str}
+    ${response}    Call SOAP Method With String XML  ${request_string}
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 

@@ -62,21 +62,14 @@ class SoapLibrary:
         | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
-        if str(xml).find("<") != -1:
-            raw_text_xml = str(xml)
-        else:
-            raw_text_xml = self._convert_xml_to_raw_text(xml)
+        raw_text_xml = self._convert_xml_to_raw_text(xml)
         xml_obj = etree.fromstring(raw_text_xml)
         response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
         etree_response = self._parse_from_unicode(response.text)
-        status_code = response.status_code
-        if status_code != 200:
+        if response.status_code != 200:
             logger.debug('URL: %s' % response.url)
             logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
-            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (status_code, response.reason))
-        log_header_response_from_ws = '<font size="3"><b>Response from webservice:</b></font> '
-        logger.info(log_header_response_from_ws, html=True)
-        logger.info(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
         return etree_response
 
     @keyword("Get Data From XML By Tag")
@@ -243,6 +236,31 @@ class SoapLibrary:
         response_decode = base64.b64decode(response)
         return response_decode.decode('utf-8', 'ignore')
 
+    @keyword("Call SOAP Method With String XML")
+    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS):
+        """
+        Send an string representation of XML as a request to the SOAP client.
+        The SOAP method is inside the XML string.
+
+        *Input Arguments:*
+        | *Name* | *Description* |
+        | string_xml | string representation of XML |
+        | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
+
+        *Example:*
+        | ${response}= | Call SOAP Method With String XML |  "string_xml" |
+        """
+        # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
+        xml_obj = etree.fromstring(string_xml)
+        response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
+        etree_response = self._parse_from_unicode(response.text)
+        if response.status_code != 200:
+            logger.debug('URL: %s' % response.url)
+            logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
+        self._print_request_info(etree_response)
+        return etree_response
+
     @staticmethod
     def _convert_xml_to_raw_text(xml_file_path):
         """
@@ -323,3 +341,9 @@ class SoapLibrary:
         request_file.write(text)
         request_file.close()
         return new_file_path
+
+    @staticmethod
+    def _print_request_info(etree_response):
+        log_header_response_from_ws = '<font size="3"><b>Response from webservice:</b></font> '
+        logger.info(log_header_response_from_ws, html=True)
+        logger.info(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
