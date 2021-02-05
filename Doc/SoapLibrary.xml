@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec name="SoapLibrary" type="library" format="ROBOT" generated="20200625 14:30:55">
-<version>0.5</version>
+<keywordspec name="SoapLibrary" type="LIBRARY" format="ROBOT" scope="SUITE" namedargs="true" generated="2021-02-05T16:52:39Z" specversion="2" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\__init__.py" lineno="5">
+<version>0.6</version>
 <scope>test suite</scope>
 <namedargs>yes</namedargs>
 <doc>    SoapLibrary is a library for testing SOAP-based web services.
@@ -23,7 +23,7 @@
 |     ${text}    Get Data From XML By Tag    ${response}    tag_name
 |     Log    ${text}
 |     Save XML To File    ${response}    ${CURDIR}    response_test</doc>
-<kw name="Call SOAP Method">
+<kw name="Call SOAP Method" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="203">
 <arguments>
 <arg>name</arg>
 <arg>*args</arg>
@@ -40,10 +40,24 @@ The first argument of the keyword  ``name``  is the operation name of the ``SOAP
 
 *Example:*
 | ${response}= | Call SOAP Method | operation_name | arg1 | arg2 |</doc>
-<tags>
-</tags>
 </kw>
-<kw name="Call SOAP Method With XML">
+<kw name="Call SOAP Method With String XML" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="240">
+<arguments>
+<arg>string_xml</arg>
+<arg>headers={'Content-Type': 'text/xml; charset=utf-8'}</arg>
+</arguments>
+<doc>Send an string representation of XML as a request to the SOAP client.
+The SOAP method is inside the XML string.
+
+*Input Arguments:*
+| *Name* | *Description* |
+| string_xml | string representation of XML |
+| headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
+
+*Example:*
+| ${response}= | Call SOAP Method With String XML |  "&lt;sample&gt;&lt;Id&gt;1&lt;/Id&gt;&lt;/sample&gt;" |</doc>
+</kw>
+<kw name="Call SOAP Method With XML" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="51">
 <arguments>
 <arg>xml</arg>
 <arg>headers={'Content-Type': 'text/xml; charset=utf-8'}</arg>
@@ -58,10 +72,8 @@ the SOAP method is inside the XML file.
 
 *Example:*
 | ${response}= | Call SOAP Method With XML |  C:\Request.xml |</doc>
-<tags>
-</tags>
 </kw>
-<kw name="Convert XML Response to Dictionary">
+<kw name="Convert XML Response to Dictionary" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="171">
 <arguments>
 <arg>xml_etree</arg>
 </arguments>
@@ -73,10 +85,8 @@ the SOAP method is inside the XML file.
 
 *Example:*
 | ${dict_response}= | Convert XML Response to Dictionary | ${response} |</doc>
-<tags>
-</tags>
 </kw>
-<kw name="Create SOAP Client">
+<kw name="Create SOAP Client" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="29">
 <arguments>
 <arg>url</arg>
 <arg>ssl_verify=True</arg>
@@ -90,10 +100,8 @@ List all Available operations/methods with INFO log level.
 
 *Example:*
 | Create SOAP Client | http://endpoint.com?wsdl |</doc>
-<tags>
-</tags>
 </kw>
-<kw name="Decode Base64">
+<kw name="Decode Base64" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="223">
 <arguments>
 <arg>response</arg>
 </arguments>
@@ -107,10 +115,8 @@ Returns the decoded response
 
 *Example:*
 | ${response_decoded}= | Decode Base64 | ${response} |</doc>
-<tags>
-</tags>
 </kw>
-<kw name="Edit XML Request">
+<kw name="Edit XML Request" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="107">
 <arguments>
 <arg>xml_file_path</arg>
 <arg>new_values_dict</arg>
@@ -133,15 +139,14 @@ Returns the file path of the new Request file.
 | xml_file_path | file path to xml file |
 | new_values_dict | dictionary with tags as keys and tag value as value |
 | edited_request_name |  name of the new XMl file generated with the changed request |
+| repeated_tags |  Occurrence number of the repeated tag to change value |
 
 *Example*:
 | ${dict}= | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
 | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |
 | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request | repeated_tags=0 |</doc>
-<tags>
-</tags>
 </kw>
-<kw name="Get Data From XML By Tag">
+<kw name="Get Data From XML By Tag" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="76">
 <arguments>
 <arg>xml</arg>
 <arg>tag</arg>
@@ -162,10 +167,8 @@ Returns the string representation of the value.
 | ${response}= | Call SOAP Method With XML |  C:\Request.xml |
 | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag |
 | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |</doc>
-<tags>
-</tags>
 </kw>
-<kw name="Save XML To File">
+<kw name="Save XML To File" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="152">
 <arguments>
 <arg>etree_xml</arg>
 <arg>save_folder</arg>
@@ -183,7 +186,5 @@ Returns the file path of the newly created xml file.
 
 *Example*:
 | ${response_file}= | Save XML To File |  ${response} | ${CURDIR} | response_file_name |</doc>
-<tags>
-</tags>
 </kw>
 </keywordspec>
