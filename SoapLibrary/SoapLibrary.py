@@ -13,7 +13,7 @@ from six import iteritems
 from urllib3.exceptions import InsecureRequestWarning
 
 logging.config.dictConfig(DICT_CONFIG)
-# hide warnings
+# hide unnecessary warnings
 warnings.simplefilter("ignore", InsecureRequestWarning)
 logging.getLogger("urllib3").setLevel(logging.WARNING)
 
