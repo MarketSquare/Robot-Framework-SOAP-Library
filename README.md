@@ -14,12 +14,7 @@ The SoapLibrary was created for those who want to use the Robot Framework as if 
 ![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/img2_SoapLibrary.png)
 
 ## Instalation
-These packages are prerequisites for the library:  
-`pip install zeep`  
-`pip install six`  
-`pip install requests`
-
-Then: `pip install robotframework-soaplibrary`
+`pip install robotframework-soaplibrary`
 
 ## Example
 
