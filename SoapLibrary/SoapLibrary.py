@@ -248,7 +248,7 @@ class SoapLibrary:
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
 
         *Example:*
-        | ${response}= | Call SOAP Method With String XML |  "string_xml" |
+        | ${response}= | Call SOAP Method With String XML |  "<sample><Id>1</Id></sample>" |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
