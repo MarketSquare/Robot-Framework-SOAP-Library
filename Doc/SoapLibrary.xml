@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec name="SoapLibrary" type="LIBRARY" format="ROBOT" scope="SUITE" namedargs="true" generated="2021-02-05T16:52:39Z" specversion="2" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\__init__.py" lineno="5">
+<keywordspec name="SoapLibrary" type="LIBRARY" format="ROBOT" scope="SUITE" generated="2021-03-29T13:13:56Z" specversion="3" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="24">
 <version>0.6</version>
-<scope>test suite</scope>
-<namedargs>yes</namedargs>
 <doc>    SoapLibrary is a library for testing SOAP-based web services.
 
     SoapLibrary is based on [https://python-zeep.readthedocs.io/en/master/|Zeep], a modern SOAP client for Python.
@@ -23,10 +21,19 @@
 |     ${text}    Get Data From XML By Tag    ${response}    tag_name
 |     Log    ${text}
 |     Save XML To File    ${response}    ${CURDIR}    response_test</doc>
-<kw name="Call SOAP Method" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="203">
-<arguments>
-<arg>name</arg>
-<arg>*args</arg>
+<tags>
+</tags>
+<inits>
+</inits>
+<keywords>
+<kw name="Call SOAP Method" lineno="229">
+<arguments repr="name, *args">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="name">
+<name>name</name>
+</arg>
+<arg kind="VAR_POSITIONAL" required="false" repr="*args">
+<name>args</name>
+</arg>
 </arguments>
 <doc>If the webservice have simple SOAP operation/method with few arguments, you can call the method with the given
 `name` and `args`.
@@ -40,11 +47,17 @@ The first argument of the keyword  ``name``  is the operation name of the ``SOAP
 
 *Example:*
 | ${response}= | Call SOAP Method | operation_name | arg1 | arg2 |</doc>
+<shortdoc>If the webservice have simple SOAP operation/method with few arguments, you can call the method with the given `name` and `args`.</shortdoc>
 </kw>
-<kw name="Call SOAP Method With String XML" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="240">
-<arguments>
-<arg>string_xml</arg>
-<arg>headers={'Content-Type': 'text/xml; charset=utf-8'}</arg>
+<kw name="Call SOAP Method With String XML" lineno="266">
+<arguments repr="string_xml, headers={'Content-Type': 'text/xml; charset=utf-8'}">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="string_xml">
+<name>string_xml</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="headers={'Content-Type': 'text/xml; charset=utf-8'}">
+<name>headers</name>
+<default>{'Content-Type': 'text/xml; charset=utf-8'}</default>
+</arg>
 </arguments>
 <doc>Send an string representation of XML as a request to the SOAP client.
 The SOAP method is inside the XML string.
@@ -56,11 +69,17 @@ The SOAP method is inside the XML string.
 
 *Example:*
 | ${response}= | Call SOAP Method With String XML |  "&lt;sample&gt;&lt;Id&gt;1&lt;/Id&gt;&lt;/sample&gt;" |</doc>
+<shortdoc>Send an string representation of XML as a request to the SOAP client. The SOAP method is inside the XML string.</shortdoc>
 </kw>
-<kw name="Call SOAP Method With XML" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="51">
-<arguments>
-<arg>xml</arg>
-<arg>headers={'Content-Type': 'text/xml; charset=utf-8'}</arg>
+<kw name="Call SOAP Method With XML" lineno="77">
+<arguments repr="xml, headers={'Content-Type': 'text/xml; charset=utf-8'}">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml">
+<name>xml</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="headers={'Content-Type': 'text/xml; charset=utf-8'}">
+<name>headers</name>
+<default>{'Content-Type': 'text/xml; charset=utf-8'}</default>
+</arg>
 </arguments>
 <doc>Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument,
 the SOAP method is inside the XML file.
@@ -72,10 +91,13 @@ the SOAP method is inside the XML file.
 
 *Example:*
 | ${response}= | Call SOAP Method With XML |  C:\Request.xml |</doc>
+<shortdoc>Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument, the SOAP method is inside the XML file.</shortdoc>
 </kw>
-<kw name="Convert XML Response to Dictionary" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="171">
-<arguments>
-<arg>xml_etree</arg>
+<kw name="Convert XML Response to Dictionary" lineno="197">
+<arguments repr="xml_etree">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml_etree">
+<name>xml_etree</name>
+</arg>
 </arguments>
 <doc>Convert the webservice response into a dictionary.
 
@@ -85,11 +107,17 @@ the SOAP method is inside the XML file.
 
 *Example:*
 | ${dict_response}= | Convert XML Response to Dictionary | ${response} |</doc>
+<shortdoc>Convert the webservice response into a dictionary.</shortdoc>
 </kw>
-<kw name="Create SOAP Client" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="29">
-<arguments>
-<arg>url</arg>
-<arg>ssl_verify=True</arg>
+<kw name="Create SOAP Client" lineno="55">
+<arguments repr="url, ssl_verify=True">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="url">
+<name>url</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="ssl_verify=True">
+<name>ssl_verify</name>
+<default>True</default>
+</arg>
 </arguments>
 <doc>Loads a WSDL from the given URL and creates a Zeep client.
 List all Available operations/methods with INFO log level.
@@ -100,10 +128,13 @@ List all Available operations/methods with INFO log level.
 
 *Example:*
 | Create SOAP Client | http://endpoint.com?wsdl |</doc>
+<shortdoc>Loads a WSDL from the given URL and creates a Zeep client. List all Available operations/methods with INFO log level.</shortdoc>
 </kw>
-<kw name="Decode Base64" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="223">
-<arguments>
-<arg>response</arg>
+<kw name="Decode Base64" lineno="249">
+<arguments repr="response">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="response">
+<name>response</name>
+</arg>
 </arguments>
 <doc>Decodes texts that are base64 encoded.
 
@@ -115,13 +146,23 @@ Returns the decoded response
 
 *Example:*
 | ${response_decoded}= | Decode Base64 | ${response} |</doc>
+<shortdoc>Decodes texts that are base64 encoded.</shortdoc>
 </kw>
-<kw name="Edit XML Request" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="107">
-<arguments>
-<arg>xml_file_path</arg>
-<arg>new_values_dict</arg>
-<arg>edited_request_name</arg>
-<arg>repeated_tags=All</arg>
+<kw name="Edit XML Request" lineno="133">
+<arguments repr="xml_file_path, new_values_dict, edited_request_name, repeated_tags=All">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml_file_path">
+<name>xml_file_path</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="new_values_dict">
+<name>new_values_dict</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="edited_request_name">
+<name>edited_request_name</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="repeated_tags=All">
+<name>repeated_tags</name>
+<default>All</default>
+</arg>
 </arguments>
 <doc>Changes a field on the given XML to a new given value, the values must be in a dictionary.
 xml_filepath must be a "template" of the request to the webservice.
@@ -145,12 +186,20 @@ Returns the file path of the new Request file.
 | ${dict}= | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
 | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |
 | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request | repeated_tags=0 |</doc>
+<shortdoc>Changes a field on the given XML to a new given value, the values must be in a dictionary. xml_filepath must be a "template" of the request to the webservice. new_values_dict must be a dictionary with the keys and values to change. request_name will be the name of the new XMl file generated with the changed request.</shortdoc>
 </kw>
-<kw name="Get Data From XML By Tag" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="76">
-<arguments>
-<arg>xml</arg>
-<arg>tag</arg>
-<arg>index=1</arg>
+<kw name="Get Data From XML By Tag" lineno="102">
+<arguments repr="xml, tag, index=1">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml">
+<name>xml</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="tag">
+<name>tag</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="false" repr="index=1">
+<name>index</name>
+<default>1</default>
+</arg>
 </arguments>
 <doc>Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning.
 The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.
@@ -167,12 +216,19 @@ Returns the string representation of the value.
 | ${response}= | Call SOAP Method With XML |  C:\Request.xml |
 | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag |
 | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |</doc>
+<shortdoc>Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning. The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.</shortdoc>
 </kw>
-<kw name="Save XML To File" source="C:\Altran\Repo\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="152">
-<arguments>
-<arg>etree_xml</arg>
-<arg>save_folder</arg>
-<arg>file_name</arg>
+<kw name="Save XML To File" lineno="178">
+<arguments repr="etree_xml, save_folder, file_name">
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="etree_xml">
+<name>etree_xml</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="save_folder">
+<name>save_folder</name>
+</arg>
+<arg kind="POSITIONAL_OR_NAMED" required="true" repr="file_name">
+<name>file_name</name>
+</arg>
 </arguments>
 <doc>Save the webservice response as a XML file.
 
@@ -186,5 +242,9 @@ Returns the file path of the newly created xml file.
 
 *Example*:
 | ${response_file}= | Save XML To File |  ${response} | ${CURDIR} | response_file_name |</doc>
+<shortdoc>Save the webservice response as a XML file.</shortdoc>
 </kw>
+</keywords>
+<datatypes>
+</datatypes>
 </keywordspec>
