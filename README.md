@@ -1,3 +1,6 @@
+[![PyPi downloads](https://img.shields.io/pypi/dm/robotframework-soaplibrary.svg)](https://pypi.org/project/robotframework-soaplibrary)
+[![Latest Version](https://img.shields.io/pypi/v/robotframework-soaplibrary.svg)](https://pypi.org/project/robotframework-soaplibrary)
+
 # Robot-Framework-SOAP-Library
 SOAP Library for Robot Framework
 
