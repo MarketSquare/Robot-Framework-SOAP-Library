@@ -10,6 +10,7 @@ ${wsdl_correios_price_calculator}    http://ws.correios.com.br/calculador/CalcPr
 ${wsdl_ip_geo}                       http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl
 ${wsdl_calculator}                   http://www.dneonline.com/calculator.asmx?wsdl
 ${request_string}                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/"><soapenv:Header/><soapenv:Body><tem:Add><tem:intA>3</tem:intA><tem:intB>5</tem:intB></tem:Add></soapenv:Body></soapenv:Envelope>
+${request_string_500}                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/"><soapenv:Header/><soapenv:Body><tem:Add><tem:intA>3</tem:intA><tem:intB>a</tem:intB></tem:Add></soapenv:Body></soapenv:Envelope>
 
 *** Test Cases ***
 Test read
@@ -223,3 +224,15 @@ Test Edit XML Request 8
     Should be equal    ${text_reason[0].text}    0000
     Should be equal    ${text_reason[1].text}    0000
     Should be equal    ${text_reason[2].text}    0000
+
+Test Call SOAP Method with XML Anything
+    Create Soap Client    ${wsdl_calculator}
+    ${response}    Call SOAP Method With XML  ${requests_dir}${/}Request_Calculator_500.xml    status=anything
+    ${result}    Get Data From XML By Tag    ${response}    faultstring
+    log    ${result}
+
+Test Call SOAP Method with String XML Anything
+    Create Soap Client    ${wsdl_calculator}
+    ${response}    Call SOAP Method With String XML  ${request_string_500}    status=anything
+    ${result}    Get Data From XML By Tag    ${response}    faultstring
+    log    ${result}

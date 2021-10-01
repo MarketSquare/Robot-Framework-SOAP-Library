@@ -22,28 +22,6 @@ DEFAULT_HEADERS = {'Content-Type': 'text/xml; charset=utf-8'}
 
 
 class SoapLibrary:
-    """
-        SoapLibrary is a library for testing SOAP-based web services.
-
-        SoapLibrary is based on [https://python-zeep.readthedocs.io/en/master/|Zeep], a modern SOAP client for Python.
-
-        This library is designed for those who want to work with webservice automation as if they were using SoapUI,
-        make a request through an XML file, and receive the response in another XML file.
-
-    = Example =
-
-    | ***** Settings *****
-    | Library           SoapLibrary
-    | Library           OperatingSystem
-    |
-    | ***** Test Cases *****
-    | Example
-    |     Create Soap Client    http://endpoint.com/example.asmx?wsdl
-    |     ${response}    Call SOAP Method With XML    ${CURDIR}/request.xml
-    |     ${text}    Get Data From XML By Tag    ${response}    tag_name
-    |     Log    ${text}
-    |     Save XML To File    ${response}    ${CURDIR}    response_test
-    """
     ROBOT_LIBRARY_SCOPE = 'TEST SUITE'
     ROBOT_LIBRARY_VERSION = VERSION
 
@@ -74,28 +52,34 @@ class SoapLibrary:
         logger.info('Available operations: %s' % operations.keys())
 
     @keyword("Call SOAP Method With XML")
-    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS):
+    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None):
         """
         Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument,
         the SOAP method is inside the XML file.
+
+        By default this keyword fails if a status code different than 200 is returned in the response,
+        this behavior can be modified using the argument status=anything
 
         *Input Arguments:*
         | *Name* | *Description* |
         | xml | file path to xml file |
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
+        | status | optional string: anything |
 
         *Example:*
         | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
+        | ${response}= | Call SOAP Method With XML |  C:\\Request_status_500.xml | status=anything |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         raw_text_xml = self._convert_xml_to_raw_text(xml)
         xml_obj = etree.fromstring(raw_text_xml)
         response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
         etree_response = self._parse_from_unicode(response.text)
-        if response.status_code != 200:
-            logger.debug('URL: %s' % response.url)
-            logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        logger.debug('URL: %s' % response.url)
+        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        if status is None and response.status_code != 200:
             raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
+        self._print_request_info(etree_response)
         return etree_response
 
     @keyword("Get Data From XML By Tag")
@@ -263,26 +247,31 @@ class SoapLibrary:
         return response_decode.decode('utf-8', 'ignore')
 
     @keyword("Call SOAP Method With String XML")
-    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS):
+    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS, status=None):
         """
         Send an string representation of XML as a request to the SOAP client.
         The SOAP method is inside the XML string.
+
+        By default this keyword fails if a status code different than 200 is returned in the response,
+        this behavior can be modified using the argument status=anything
 
         *Input Arguments:*
         | *Name* | *Description* |
         | string_xml | string representation of XML |
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
+        | status | optional string: anything |
 
         *Example:*
         | ${response}= | Call SOAP Method With String XML |  "<sample><Id>1</Id></sample>" |
+        | ${response}= | Call SOAP Method With String XML |  "<sample><Id>error</Id></sample>" | status=anything |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
         response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
         etree_response = self._parse_from_unicode(response.text)
-        if response.status_code != 200:
-            logger.debug('URL: %s' % response.url)
-            logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        logger.debug('URL: %s' % response.url)
+        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        if status is None and response.status_code != 200:
             raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
         self._print_request_info(etree_response)
         return etree_response
