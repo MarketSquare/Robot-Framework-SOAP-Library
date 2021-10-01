@@ -11,6 +11,7 @@ from robot.api import logger
 from robot.api.deco import keyword
 from six import iteritems
 from urllib3.exceptions import InsecureRequestWarning
+from .version import VERSION
 
 logging.config.dictConfig(DICT_CONFIG)
 # hide unnecessary warnings
@@ -22,7 +23,7 @@ DEFAULT_HEADERS = {'Content-Type': 'text/xml; charset=utf-8'}
 
 class SoapLibrary:
     ROBOT_LIBRARY_SCOPE = 'TEST SUITE'
-    ROBOT_LIBRARY_VERSION = '0.7'
+    ROBOT_LIBRARY_VERSION = VERSION
 
     def __init__(self):
         self.client = None
