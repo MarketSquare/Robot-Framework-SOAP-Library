@@ -74,7 +74,7 @@ class SoapLibrary:
         logger.info('Available operations: %s' % operations.keys())
 
     @keyword("Call SOAP Method With XML")
-    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS):
+    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None):
         """
         Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument,
         the SOAP method is inside the XML file.
@@ -92,10 +92,11 @@ class SoapLibrary:
         xml_obj = etree.fromstring(raw_text_xml)
         response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
         etree_response = self._parse_from_unicode(response.text)
-        if response.status_code != 200:
-            logger.debug('URL: %s' % response.url)
-            logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        logger.debug('URL: %s' % response.url)
+        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        if status is None and response.status_code != 200:
             raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
+        self._print_request_info(etree_response)
         return etree_response
 
     @keyword("Get Data From XML By Tag")
@@ -263,7 +264,7 @@ class SoapLibrary:
         return response_decode.decode('utf-8', 'ignore')
 
     @keyword("Call SOAP Method With String XML")
-    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS):
+    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS, status=None):
         """
         Send an string representation of XML as a request to the SOAP client.
         The SOAP method is inside the XML string.
@@ -280,9 +281,9 @@ class SoapLibrary:
         xml_obj = etree.fromstring(string_xml)
         response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
         etree_response = self._parse_from_unicode(response.text)
-        if response.status_code != 200:
-            logger.debug('URL: %s' % response.url)
-            logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        logger.debug('URL: %s' % response.url)
+        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        if status is None and response.status_code != 200:
             raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
         self._print_request_info(etree_response)
         return etree_response
