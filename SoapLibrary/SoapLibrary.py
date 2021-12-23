@@ -9,6 +9,7 @@ from zeep.transports import Transport
 from zeep.wsdl.utils import etree
 from robot.api import logger
 from robot.api.deco import keyword
+from robot.utils import is_falsy, is_string
 from six import iteritems
 from urllib3.exceptions import InsecureRequestWarning
 from .version import VERSION
@@ -52,7 +53,10 @@ class SoapLibrary:
         """
         self.url = url
         session = Session()
-        session.verify = ssl_verify
+        if is_falsy(ssl_verify):
+            session.verify = False
+        elif is_string(ssl_verify):
+            session.verify = ssl_verify
         session.cert = client_cert_location
         self.client = Client(self.url, transport=Transport(session=session))
         logger.info('Connected to: %s' % self.client.wsdl.location)
