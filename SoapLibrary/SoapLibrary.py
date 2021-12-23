@@ -30,21 +30,30 @@ class SoapLibrary:
         self.url = None
 
     @keyword("Create SOAP Client")
-    def create_soap_client(self, url, ssl_verify=True):
+    def create_soap_client(self, url, ssl_verify=True, client_cert_location=None):
         """
-        Loads a WSDL from the given URL and creates a Zeep client.
+        Loads a WSDL from the given ``url`` and creates a Zeep client.
         List all Available operations/methods with INFO log level.
 
-        *Input Arguments:*
-        | *Name* | *Description* |
-        | url | wsdl url |
+        By default, server TLS certificate is validated. You can disable this behavior
+        by setting ``ssl_verify`` to ``False`` (not recommended!).
+        If your host uses a self signed certificate, you can also pass the path of the
+        CA_BUNDLE to ``sll_verify``. Accepted are only X.509 ASCII files (file extension .pem, sometimes .crt).
+        If you have two different files for root and intermediate certificate,
+        you must combine them manually into one.
+
+        If your host requires client certificate based authentication, you can pass the
+        path to your client certificate to the ``client_cert_path`` argument.
 
         *Example:*
-        | Create SOAP Client | http://endpoint.com?wsdl |
+        | Create SOAP Client | http://endpoint.com?wsdl  |
+        | Create SOAP Client | https://endpoint.com?wsdl | ssl_verify=True |
+        | Create SOAP Client | https://endpoint.com?wsdl | client_cert_location=${CURDIR}${/}mycert.pem |
         """
         self.url = url
         session = Session()
         session.verify = ssl_verify
+        session.cert = client_cert_location
         self.client = Client(self.url, transport=Transport(session=session))
         logger.info('Connected to: %s' % self.client.wsdl.location)
         info = self.client.service.__dict__
