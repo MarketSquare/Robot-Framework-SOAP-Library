@@ -10,7 +10,6 @@ from zeep.transports import Transport
 from zeep.wsdl.utils import etree
 from robot.api import logger
 from robot.api.deco import keyword
-from robot.utils import is_falsy, is_string
 from six import iteritems
 from urllib3.exceptions import InsecureRequestWarning
 from .version import VERSION
