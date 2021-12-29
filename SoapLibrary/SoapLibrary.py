@@ -31,7 +31,7 @@ class SoapLibrary:
         self.url = None
 
     @keyword("Create SOAP Client")
-    def create_soap_client(self, url, ssl_verify=True, client_cert_location=None, auth=None):
+    def create_soap_client(self, url, ssl_verify=True, client_cert=None, auth=None):
         """
         Loads a WSDL from the given ``url`` and creates a Zeep client.
         List all Available operations/methods with INFO log level.
@@ -44,7 +44,7 @@ class SoapLibrary:
         you must combine them manually into one.
 
         If your host requires client certificate based authentication, you can pass the
-        path to your client certificate to the ``client_cert_path`` argument.
+        path to your client certificate to the ``client_cert`` argument.
 
         For HTTP Basic Authentication, you can pass the list with username and password
         to the ``auth`` parameter.
@@ -52,14 +52,14 @@ class SoapLibrary:
         *Example:*
         | Create SOAP Client    | http://endpoint.com?wsdl  |
         | Create SOAP Client    | https://endpoint.com?wsdl | ssl_verify=True                               |
-        | Create SOAP Client    | https://endpoint.com?wsdl | client_cert_location=${CURDIR}${/}mycert.pem  |
+        | Create SOAP Client    | https://endpoint.com?wsdl | client_cert=${CURDIR}${/}mycert.pem  |
         | ${auth}               | Create List               | username | password                           |
         | Create SOAP Client    | https://endpoint.com?wsdl | auth=${auth}                                  |
         """
         self.url = url
         session = Session()
         session.verify = ssl_verify
-        session.cert = client_cert_location
+        session.cert = client_cert
         session.auth = HTTPBasicAuth(*auth) if auth else None
         self.client = Client(self.url, transport=Transport(session=session))
         logger.info('Connected to: %s' % self.client.wsdl.location)
