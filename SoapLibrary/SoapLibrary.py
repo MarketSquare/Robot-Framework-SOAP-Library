@@ -38,7 +38,7 @@ class SoapLibrary:
 
         By default, server TLS certificate is validated. You can disable this behavior
         by setting ``ssl_verify`` to ``False`` (not recommended!).
-        If your host uses a self signed certificate, you can also pass the path of the
+        If your host uses a self-signed certificate, you can also pass the path of the
         CA_BUNDLE to ``sll_verify``. Accepted are only X.509 ASCII files (file extension .pem, sometimes .crt).
         If you have two different files for root and intermediate certificate,
         you must combine them manually into one.
