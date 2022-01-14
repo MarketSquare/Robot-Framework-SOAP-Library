@@ -15,10 +15,10 @@ ${request_string_500}                <soapenv:Envelope xmlns:soapenv="http://sch
 
 *** Test Cases ***
 Test_connections
-    ${result}    Run Process    ping 8.8.8.8   shell=True  stdout=./stdout.txt
+    log     testing    WARN
+    ${result}    Run Process    curl www.dneonline.com    shell=True
     Log    ${result.stdout}    WARN
-    ${result}    Run Process    ping www.dneonline.com    shell=True  stdout=./stdout.txt
-    log    ${result.stdout}    WARN
+
 
 
 Test read
