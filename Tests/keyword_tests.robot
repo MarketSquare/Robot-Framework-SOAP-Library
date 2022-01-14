@@ -3,6 +3,7 @@ Library           ../SoapLibrary/
 Library           Collections
 Library           OperatingSystem
 Library           XML    use_lxml=True
+Library           Process
 
 *** Variables ***
 ${requests_dir}                      ${CURDIR}${/}Requests
@@ -13,6 +14,13 @@ ${request_string}                    <soapenv:Envelope xmlns:soapenv="http://sch
 ${request_string_500}                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/"><soapenv:Header/><soapenv:Body><tem:Add><tem:intA>3</tem:intA><tem:intB>a</tem:intB></tem:Add></soapenv:Body></soapenv:Envelope>
 
 *** Test Cases ***
+Test_connections
+    ${result}    Run Process    ping 8.8.8.8   shell=True
+    log    ${result.stdout}    WARN
+    ${result}    Run Process    ping www.dneonline.com   shell=True
+    log    ${result.stdout}    WARN
+
+
 Test read
     Create Soap Client    ${wsdl_calculator}
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml
