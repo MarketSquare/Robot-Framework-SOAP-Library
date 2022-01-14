@@ -8,7 +8,7 @@ Library           XML    use_lxml=True
 ${requests_dir}                      ${CURDIR}${/}Requests
 ${wsdl_correios_price_calculator}    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
 ${wsdl_ip_geo}                       http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl
-${wsdl_calculator}                   http://www.dneonline.com/calculator.asmx?wsdl
+${wsdl_calculator}                   http://dneonline.com/calculator.asmx?wsdl
 ${request_string}                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/"><soapenv:Header/><soapenv:Body><tem:Add><tem:intA>3</tem:intA><tem:intB>5</tem:intB></tem:Add></soapenv:Body></soapenv:Envelope>
 ${request_string_500}                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/"><soapenv:Header/><soapenv:Body><tem:Add><tem:intA>3</tem:intA><tem:intB>a</tem:intB></tem:Add></soapenv:Body></soapenv:Envelope>
 
