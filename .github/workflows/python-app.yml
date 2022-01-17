@@ -29,7 +29,7 @@ jobs:
         if: always()
         with:
           name: reports
-          path: ${{ github.workspace }}/reports
+          path: ${{ github.workspace }}/Tests
 
   generate_report:
     if: always()
@@ -53,4 +53,4 @@ jobs:
           REPO_OWNER: ${{ env.REPOSITORY_OWNER }}
           COMMIT_SHA: ${{ github.sha }}
           REPOSITORY: ${{ env.REPOSITORY_NAME }}
-          REPORT_PATH: reports
+          REPORT_PATH: Tests
