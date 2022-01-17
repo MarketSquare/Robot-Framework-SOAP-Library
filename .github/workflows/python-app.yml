@@ -33,7 +33,7 @@ jobs:
 
   generate-robot-report:
     if: always()
-    needs: [build]
+    needs: [run-robot-tests]
     runs-on: ubuntu-latest
     steps:
       - name: Download reports
