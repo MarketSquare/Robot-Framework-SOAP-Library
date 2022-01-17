@@ -45,7 +45,7 @@ jobs:
           export OWNER="$(echo "${{ github.repository }}" | awk -F / '{print $1}' | sed -e "s/:refs//")"
           export REPO="$(echo "${{ github.repository }}" | awk -F / '{print $2}' | sed -e "s/:refs//")"
       - name: Send report to commit
-        uses: Altran-PT-GDC/robotframework-reporter-action@v0.1
+        uses: Altran-PT-GDC/Robot-Framework-SOAP-Library@v0.1
         env:
           GH_ACCESS_TOKEN: ${{ secrets.TOKEN }}
           REPO_OWNER: ${{ env.REPOSITORY_OWNER }}
