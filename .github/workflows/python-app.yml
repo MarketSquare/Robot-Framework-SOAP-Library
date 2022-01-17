@@ -9,7 +9,7 @@ name: SOAP-Library
       - master
 
 jobs:
-  build:
+  run-robot-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -28,10 +28,10 @@ jobs:
         uses: actions/upload-artifact@v1
         if: always()
         with:
-          name: reports
+          name: robot_reports
           path: ${{ github.workspace }}/Tests/Report
 
-  generate_report:
+  generate-robot-report:
     if: always()
     needs: [build]
     runs-on: ubuntu-latest
@@ -39,16 +39,4 @@ jobs:
       - name: Download reports
         uses: actions/download-artifact@v1
         with:
-          name: Robot_reports
-      - name: Get Repository Owner & Name
-        run: |
-          export OWNER="$(echo "${{ github.repository }}" | awk -F / '{print $1}' | sed -e "s/:refs//")"
-          export REPO="$(echo "${{ github.repository }}" | awk -F / '{print $2}' | sed -e "s/:refs//")"
-      - name: Send report to commit
-        uses: Altran-PT-GDC/Robot-Framework-SOAP-Library@v2
-        env:
-          GH_ACCESS_TOKEN: ${{ secrets.TOKEN }}
-          REPO_OWNER: ${{ env.REPOSITORY_OWNER }}
-          COMMIT_SHA: ${{ github.sha }}
-          REPOSITORY: ${{ env.REPOSITORY_NAME }}
-          REPORT_PATH: Tests
+          name: robot_reports
