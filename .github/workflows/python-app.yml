@@ -17,19 +17,19 @@ jobs:
         uses: actions/setup-python@v2
         env:
           ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
-          ROBOT_REPORTS_DIR: ${{ github.workspace }}/Tests
+          ROBOT_REPORTS_DIR: ${{ github.workspace }}/Tests/Report
         with:
           python-version: '3.10'
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Run Robot File
-        run: robot ./Tests/keyword_tests.robot
+        run: robot -d ./Tests/Report ./Tests/keyword_tests.robot
       - name: Upload test results
         uses: actions/upload-artifact@v1
         if: always()
         with:
           name: reports
-          path: ${{ github.workspace }}/Tests
+          path: ${{ github.workspace }}/Tests/Report
 
   generate_report:
     if: always()
@@ -39,13 +39,13 @@ jobs:
       - name: Download reports
         uses: actions/download-artifact@v1
         with:
-          name: reports
+          name: Robot_reports
       - name: Get Repository Owner & Name
         run: |
           export OWNER="$(echo "${{ github.repository }}" | awk -F / '{print $1}' | sed -e "s/:refs//")"
           export REPO="$(echo "${{ github.repository }}" | awk -F / '{print $2}' | sed -e "s/:refs//")"
       - name: Send report to commit
-        uses: joonvena/robotframework-reporter-action@v0.1
+        uses: Altran-PT-GDC/robotframework-reporter-action@v0.1
         env:
           GH_ACCESS_TOKEN: ${{ secrets.TOKEN }}
           REPO_OWNER: ${{ env.REPOSITORY_OWNER }}
