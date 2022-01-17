@@ -9,28 +9,21 @@ Library           Process
 ${requests_dir}                      ${CURDIR}${/}Requests
 ${wsdl_correios_price_calculator}    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
 ${wsdl_ip_geo}                       http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl
-${wsdl_calculator}                   http://www.dneonline.com/calculator.asmx?wsdl
-${request_string}                    <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/"><soapenv:Header/><soapenv:Body><tem:Add><tem:intA>3</tem:intA><tem:intB>5</tem:intB></tem:Add></soapenv:Body></soapenv:Envelope>
-${request_string_500}                <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:tem="http://tempuri.org/"><soapenv:Header/><soapenv:Body><tem:Add><tem:intA>3</tem:intA><tem:intB>a</tem:intB></tem:Add></soapenv:Body></soapenv:Envelope>
+${wsdl_calculator}                   http://calculator-webservice.mybluemix.net/calculator?wsdl
+${request_string}                    <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><add xmlns="http://example.com/"><intA xmlns="">3</intA><intB xmlns="">5</intB></add></Body></Envelope>
+${request_string_500}                <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><add_error xmlns="http://example.com/"><intA xmlns="">3</intA><intB xmlns="">a</intB></add_error></Body></Envelope>
 
 *** Test Cases ***
-Test_connections
-    log     testing    WARN
-    ${result}    Run Process    curl www.dneonline.com    shell=True
-    Log    ${result.stdout}    WARN
-
-
-
 Test read
     Create Soap Client    ${wsdl_calculator}
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml
-    ${result}    Get Data From XML By Tag    ${response}    AddResult
+    ${result}    Get Data From XML By Tag    ${response}    value
     should be equal    8    ${result}
 
 Test read string xml
     Create Soap Client    ${wsdl_calculator}
     ${response}    Call SOAP Method With String XML  ${request_string}
-    ${result}    Get Data From XML By Tag    ${response}    AddResult
+    ${result}    Get Data From XML By Tag    ${response}    value
     should be equal    8    ${result}
 
 Test read utf8
@@ -48,10 +41,10 @@ Test Read tags with index
 Test Edit and Read
     Remove File    ${requests_dir}${/}New_Request_Calculator.xml
     Create Soap Client    ${wsdl_calculator}
-    ${dict}    Create Dictionary    tem:intA=9    tem:intB=5
+    ${dict}    Create Dictionary    intA=9    intB=5
     ${xml_edited}    Edit XML Request    ${requests_dir}${/}Request_Calculator.xml    ${dict}    New_Request_Calculator
     ${response}    Call SOAP Method With XML    ${xml_edited}
-    ${result}    Get Data From XML By Tag    ${response}    AddResult
+    ${result}    Get Data From XML By Tag    ${response}    value
     should be equal    14    ${result}
     Should Exist    ${requests_dir}${/}New_Request_Calculator.xml
 
@@ -78,7 +71,7 @@ Test Save File Response
 
 Test Call Soap Method
     Create Soap Client    ${wsdl_calculator}
-    ${response}    Call SOAP Method    Add    2    1
+    ${response}    Call SOAP Method    add    2    1
     should be equal as integers    3    ${response}
 
 Test Edit XML Request 1
@@ -238,9 +231,11 @@ Test Call SOAP Method with XML Anything
     ${response}    Call SOAP Method With XML  ${requests_dir}${/}Request_Calculator_500.xml    status=anything
     ${result}    Get Data From XML By Tag    ${response}    faultstring
     log    ${result}
+    Should Contain    ${result}    Cannot find dispatch method for
 
 Test Call SOAP Method with String XML Anything
     Create Soap Client    ${wsdl_calculator}
     ${response}    Call SOAP Method With String XML  ${request_string_500}    status=anything
     ${result}    Get Data From XML By Tag    ${response}    faultstring
     log    ${result}
+    Should Contain    ${result}    Cannot find dispatch method for
