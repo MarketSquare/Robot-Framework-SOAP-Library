@@ -36,6 +36,10 @@ The SoapLibrary was created for those who want to use the Robot Framework as if 
         Log    ${text}
         Save XML To File    ${response}    ${CURDIR}    response_test
         
+## Example with certificate
+
+You can see [here](https://michaelhallik.github.io/blog/2022/04/10/Using-OpenSSL-to-provide-the-RF-SoapLibrary-with-a-TLS-client-certificate) an example of how to use OPENSSL to access a webservice with TLS certificate. (Thanks Michael Hallik)
+
 ## Keyword Documentation
 
 You can find the keywords documentation [here](https://raw.githack.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/master/Doc/SoapLibrary.html)     
