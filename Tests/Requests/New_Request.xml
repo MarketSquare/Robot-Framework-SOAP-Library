@@ -1,0 +1,31 @@
+<Body>
+<ContactMethod>
+              <Contact>EmailAddress</Contact>
+              <Status>
+                 <startDate>07-06-2020</startDate>
+                 <name>AAAAA</name>
+              </Status>
+              <ContactMethodQuality>
+                 <Reason>0000</Reason>
+              </ContactMethodQuality>
+</ContactMethod>
+<ContactMethod>
+              <Contact>PhoneNumber</Contact>
+              <Status>
+                 <startDate>07-06-2020</startDate>
+				 <name2>BBBB</name2>
+              </Status>
+              <ContactMethodQuality>
+                 <Reason>0000</Reason>
+              </ContactMethodQuality>
+</ContactMethod>
+<ContactMethod>
+              <Contact>PhoneNumber</Contact>
+              <Status>
+                 <startDate>07-06-2020</startDate>
+              </Status>
+              <ContactMethodQuality>
+                 <Reason>0000</Reason>
+              </ContactMethodQuality>
+</ContactMethod>
+</Body>
