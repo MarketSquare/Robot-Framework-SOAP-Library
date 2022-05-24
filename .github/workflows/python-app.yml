@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Python 3.10
-        uses: joonvena/robotframework-docker-action@v0.1
+        uses: actions/setup-python@v2
         env:
           ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
           ROBOT_REPORTS_DIR: ${{ github.workspace }}/reports
@@ -45,4 +45,4 @@ jobs:
       uses: joonvena/robotframework-reporter-action@v2.1
       with:
         gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-        report_path: /reports
+        report_path: ${{ github.workspace }}/reports
