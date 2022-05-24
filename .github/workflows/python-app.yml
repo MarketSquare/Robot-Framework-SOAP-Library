@@ -1,6 +1,6 @@
 name: SOAP-Library
 
-'on':
+on:
   push:
     branches:
       - master
@@ -18,19 +18,19 @@ jobs:
         uses: actions/setup-python@v2
         env:
           ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
-          ROBOT_REPORTS_DIR: ${{ github.workspace }}/Tests/Report
+          ROBOT_REPORTS_DIR: ${{ github.workspace }}/reports
         with:
           python-version: '3.10'
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Run Robot File
-        run: robot -d ./Tests/Report ./Tests/keyword_tests.robot
+        run: robot -d ./reports ./Tests/keyword_tests.robot
       - name: Upload test results
         uses: actions/upload-artifact@v1
         if: always()
         with:
           name: robot_reports
-          path: ${{ github.workspace }}/Tests/Report
+          path: ${{ github.workspace }}/reports
 
   generate-robot-report:
     if: always()
@@ -41,9 +41,9 @@ jobs:
     - name: Download reports
       uses: actions/download-artifact@v1
       with:
-        name: robot_reports
+        name: reports
     - name: Send report to commit
       uses: joonvena/robotframework-reporter-action@v2.1
       with:
         gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-        report_path: /Tests/Report
+        report_path: reports
