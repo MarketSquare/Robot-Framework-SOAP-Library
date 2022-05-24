@@ -1,8 +1,8 @@
 <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/">
     <Body>
-        <add xmlns="http://example.com/">
-            <intA xmlns="">3</intA>
-            <intB xmlns="">5</intB>
-        </add>
+        <Add xmlns="http://tempuri.org/">
+            <a>3</a>
+            <b>5</b>
+        </Add>
     </Body>
 </Envelope>
