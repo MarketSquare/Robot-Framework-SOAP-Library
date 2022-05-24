@@ -30,7 +30,7 @@ jobs:
         if: always()
         with:
           name: robot_reports
-          path: /Tests/Report
+          path: ${{ github.workspace }}/Tests/Report
 
   generate-robot-report:
     if: always()
@@ -46,4 +46,4 @@ jobs:
       uses: joonvena/robotframework-reporter-action@v2.1
       with:
         gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-        report_path: /Tests/Report
+        report_path: ${{ github.workspace }}/Tests/Report
