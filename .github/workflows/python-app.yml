@@ -14,23 +14,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v2
-        env:
-          ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
-          ROBOT_REPORTS_DIR: ${{ github.workspace }}/Tests/Report
+      - name: Execute tests
+        uses: joonvena/robotframework-docker-action@v1.0
+      - name: Upload test results
+        uses: actions/upload-artifact@v1
+        if: always()
         with:
-          python-version: '3.10'
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-      - name: Run Robot File
-        run: robot -d ./Tests/Report ./Tests/keyword_tests.robot
-#      - name: Upload test results
-#        uses: actions/upload-artifact@v1
-#        if: always()
-#        with:
-#          name: robot_reports
-#          path: ${{ github.workspace }}/Tests/Report
+          name: reports
+          path: reports
 
   generate-robot-report:
     if: always()
@@ -46,4 +37,3 @@ jobs:
       uses: joonvena/robotframework-reporter-action@v2.1
       with:
         gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-        report_path: Tests/Report
