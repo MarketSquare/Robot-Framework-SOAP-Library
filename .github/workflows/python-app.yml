@@ -30,19 +30,19 @@ jobs:
         if: always()
         with:
           name: robot_reports
-          path: ${{ github.workspace }}/reports
+          path: reports
 
   generate-robot-report:
     if: always()
     needs: [run-robot-tests]
     runs-on: ubuntu-latest
     steps:
-    - name: Send report to commit
-      uses: joonvena/robotframework-reporter-action@v2.1
-      with:
-        gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-        report_path: /reports
     - name: Download reports
       uses: actions/download-artifact@v1
       with:
         name: robot_reports
+    - name: Send report to commit
+      uses: joonvena/robotframework-reporter-action@v2.1
+      with:
+        gh_access_token: ${{ secrets.GITHUB_TOKEN }}
+        report_path: /robot_reports
