@@ -37,12 +37,12 @@ jobs:
     needs: [run-robot-tests]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Download reports
-        uses: actions/download-artifact@v1
-        with:
-          name: reports
-      - name: Send report to commit
-        uses: joonvena/robotframework-reporter-action@v2.1
-        with:
-          gh_access_token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v2
+    - name: Download reports
+      uses: actions/download-artifact@v1
+      with:
+        name: robot_reports
+    - name: Send report to commit
+      uses: joonvena/robotframework-reporter-action@v2.1
+      with:
+        gh_access_token: ${{ secrets.GITHUB_TOKEN }}
