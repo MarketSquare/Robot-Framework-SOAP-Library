@@ -25,12 +25,12 @@ jobs:
         run: pip install -r requirements.txt
       - name: Run Robot File
         run: robot -d ./Tests/Report ./Tests/keyword_tests.robot
-      - name: Upload test results
-        uses: actions/upload-artifact@v1
-        if: always()
-        with:
-          name: robot_reports
-          path: ${{ github.workspace }}/Tests/Report
+#      - name: Upload test results
+#        uses: actions/upload-artifact@v1
+#        if: always()
+#        with:
+#          name: robot_reports
+#          path: ${{ github.workspace }}/Tests/Report
 
   generate-robot-report:
     if: always()
