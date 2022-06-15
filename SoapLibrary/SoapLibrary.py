@@ -283,7 +283,7 @@ class SoapLibrary:
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
-        response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
+        response = self.client.transport.post_xml(address=self.client.service._binding_options['address'], envelope=xml_obj, headers=headers)
         etree_response = self._parse_from_unicode(response.text)
         logger.debug('URL: %s' % response.url)
         logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
