@@ -14,11 +14,11 @@ with open(version_file) as file:
     exec(code)
 
 setup(name             = 'robotframework-soaplibrary',
-      version          = '0.8',
+      version          = '0.9',
       description      = 'SOAP Library for Robot Framework',
 	  long_description = 'Test library for Robot Framework to create automated test like using SOAPUI',
       author           = 'Altran Portugal',
-      author_email     = 'samuel.cabral@altran.com',
+      author_email     = 'samuca@gmail.com',
       license          = 'MIT License',
       url              = 'https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library',
       packages         = ['SoapLibrary'],
