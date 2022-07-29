@@ -10,7 +10,6 @@ from zeep.transports import Transport
 from zeep.wsdl.utils import etree
 from robot.api import logger
 from robot.api.deco import keyword
-from six import iteritems
 from urllib3.exceptions import InsecureRequestWarning
 from .version import VERSION
 
@@ -158,7 +157,7 @@ class SoapLibrary:
         xml = self._convert_string_to_xml(string_xml)
         if not isinstance(new_values_dict, dict):
             raise Exception("new_values_dict argument must be a dictionary")
-        for key, value in iteritems(new_values_dict):
+        for key, value in new_values_dict.items():
             if len(xml.xpath(self._replace_xpath_by_local_name(key))) == 0:
                 logger.warn('Tag "%s" not found' % key)
                 continue

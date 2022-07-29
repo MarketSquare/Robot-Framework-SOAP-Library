@@ -75,25 +75,3 @@ jobs:
         with:
           name: robot_reports
           path: reports
-
-  run-robot-tests-py2-7:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 2.7
-        uses: actions/setup-python@v2
-        env:
-          ROBOT_TESTS_DIR: ${{ github.workspace }}/Tests
-          ROBOT_REPORTS_DIR: ${{ github.workspace }}/reports
-        with:
-          python-version: '2.7'
-      - name: Install Dependencies
-        run: pip install -r requirements.txt
-      - name: Run Robot File
-        run: robot -d ./reports ./Tests/keyword_tests.robot
-      - name: Upload test results
-        uses: actions/upload-artifact@v1
-        if: always()
-        with:
-          name: robot_reports
-          path: reports
