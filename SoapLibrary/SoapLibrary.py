@@ -65,7 +65,7 @@ class SoapLibrary:
         logger.info('Connected to: %s' % self.client.wsdl.location)
         info = self.client.service.__dict__
         operations = info["_operations"]
-        logger.info('Available operations: %s' % operations.keys())
+        logger.info('Available operations: %s' % list(operations))
 
     @keyword("Call SOAP Method With XML")
     def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None):
