@@ -8,9 +8,8 @@
 SOAP Library for Robot Framework
 
 ## Compatibility
-- _Python 2.7_
-- _Python 3.7_
-- _Zeep 3.1.0_ (or higher)
+- _Python 3.7 +_
+- _Zeep 3.1.0 +_ 
 
 ## Introduction
 The SoapLibrary was created for those who want to use the Robot Framework as if they were using SoapUI, just send the request XML and get the response XML.
@@ -20,10 +19,18 @@ The SoapLibrary was created for those who want to use the Robot Framework as if 
 ![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/img2_SoapLibrary.png)
 
 ## Instalation
-`pip install robotframework-soaplibrary`
+For the first time install:
+```commandline
+pip install robotframework-soaplibrary
+```
+Or you can upgrade with:
+```commandline
+pip install --upgrade robotframework-soaplibrary
+```
 
 ## Example
 
+```RobotFramework
     *** Settings ***
     Library           SoapLibrary
     Library           OperatingSystem
@@ -35,6 +42,7 @@ The SoapLibrary was created for those who want to use the Robot Framework as if 
         ${text}    Get Data From XML By Tag    ${response}    tag_name
         Log    ${text}
         Save XML To File    ${response}    ${CURDIR}    response_test
+```
         
 ## Example with certificate
 
