@@ -1,6 +1,5 @@
 LICENSE.md
 README.md
-setup.cfg
 setup.py
 SoapLibrary/SoapLibrary.py
 SoapLibrary/__init__.py

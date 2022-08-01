@@ -10,7 +10,6 @@ from zeep.transports import Transport
 from zeep.wsdl.utils import etree
 from robot.api import logger
 from robot.api.deco import keyword
-from six import iteritems
 from urllib3.exceptions import InsecureRequestWarning
 from .version import VERSION
 
@@ -50,11 +49,11 @@ class SoapLibrary:
         to the ``auth`` parameter.
 
         *Example:*
-        | Create SOAP Client    | http://endpoint.com?wsdl  |
-        | Create SOAP Client    | https://endpoint.com?wsdl | ssl_verify=True                               |
-        | Create SOAP Client    | https://endpoint.com?wsdl | client_cert=${CURDIR}${/}mycert.pem  |
-        | ${auth}               | Create List               | username | password                           |
-        | Create SOAP Client    | https://endpoint.com?wsdl | auth=${auth}                                  |
+        | Create SOAP Client | http://endpoint.com?wsdl |
+        | Create SOAP Client | https://endpoint.com?wsdl | ssl_verify=True |
+        | Create SOAP Client | https://endpoint.com?wsdl | client_cert=${CURDIR}${/}mycert.pem |
+        | ${auth} | Create List | username | password |
+        | Create SOAP Client | https://endpoint.com?wsdl | auth=${auth} |
         """
         self.url = url
         session = Session()
@@ -65,7 +64,7 @@ class SoapLibrary:
         logger.info('Connected to: %s' % self.client.wsdl.location)
         info = self.client.service.__dict__
         operations = info["_operations"]
-        logger.info('Available operations: %s' % operations.keys())
+        logger.info('Available operations: %s' % list(operations))
 
     @keyword("Call SOAP Method With XML")
     def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None):
@@ -158,7 +157,7 @@ class SoapLibrary:
         xml = self._convert_string_to_xml(string_xml)
         if not isinstance(new_values_dict, dict):
             raise Exception("new_values_dict argument must be a dictionary")
-        for key, value in iteritems(new_values_dict):
+        for key, value in new_values_dict.items():
             if len(xml.xpath(self._replace_xpath_by_local_name(key))) == 0:
                 logger.warn('Tag "%s" not found' % key)
                 continue
@@ -231,7 +230,8 @@ class SoapLibrary:
         If the webservice have simple SOAP operation/method with few arguments, you can call the method with the given
         `name` and `args`.
 
-        The first argument of the keyword  ``name``  is the operation name of the ``SOAP operation/method`` [https://www.soapui.org/soap-and-wsdl/operations-and-requests.html|More information here]
+        The first argument of the keyword  ``name``  is the operation name of the ``SOAP operation/method``
+        [https://www.soapui.org/soap-and-wsdl/operations-and-requests.html|More information here]
 
         *Input Arguments:*
         | *Name* | *Description* |
@@ -278,8 +278,8 @@ class SoapLibrary:
         | status | optional string: anything |
 
         *Example:*
-        | ${response}= | Call SOAP Method With String XML |  "<sample><Id>1</Id></sample>" |
-        | ${response}= | Call SOAP Method With String XML |  "<sample><Id>error</Id></sample>" | status=anything |
+        | ${response}= | Call SOAP Method With String XML | "<sample><Id>1</Id></sample>" |
+        | ${response}= | Call SOAP Method With String XML | "<sample><Id>error</Id></sample>" | status=anything |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
@@ -324,7 +324,7 @@ class SoapLibrary:
         Parses a single xpath or a list of xml tags.
 
         :param tags: string for a single xml tag or list for multiple xml tags
-        :return:
+        :return: parsed xpath
         """
         xpath = ''
         if isinstance(tags, list):

@@ -16,20 +16,20 @@ ${request_string_500}                <Envelope xmlns="http://schemas.xmlsoap.org
 *** Test Cases ***
 Test Call Soap Method
     [Tags]    calculator
-    Create Soap Client    ${wsdl_calculator}
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method    Add    2    1
     should be equal as integers    3    ${response}
 
 Test read
     [Tags]    calculator
-    Create Soap Client    ${wsdl_calculator}
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 
 Test read string xml
     [Tags]    calculator
-    Create Soap Client    ${wsdl_calculator}
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With String XML  ${request_string}
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
@@ -37,7 +37,7 @@ Test read string xml
 Test Edit and Read
     [Tags]    calculator
     Remove File    ${requests_dir}${/}New_Request_Calculator.xml
-    Create Soap Client    ${wsdl_calculator}
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${dict}    Create Dictionary    a=9    b=5
     ${xml_edited}    Edit XML Request    ${requests_dir}${/}Request_Calculator.xml    ${dict}    New_Request_Calculator
     ${response}    Call SOAP Method With XML    ${xml_edited}
@@ -47,7 +47,7 @@ Test Edit and Read
 
 Test Call SOAP Method with XML Anything
     [Tags]    calculator
-    Create Soap Client    ${wsdl_calculator}
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With XML  ${requests_dir}${/}Request_Calculator_500.xml    status=anything
     ${result}    Get Data From XML By Tag    ${response}    faultstring
     log    ${result}
@@ -55,7 +55,7 @@ Test Call SOAP Method with XML Anything
 
 Test Call SOAP Method with String XML Anything
     [Tags]    calculator
-    Create Soap Client    ${wsdl_calculator}
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With String XML  ${request_string_500}    status=anything
     ${result}    Get Data From XML By Tag    ${response}    faultstring
     log    ${result}

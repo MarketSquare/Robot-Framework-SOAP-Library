@@ -1,5 +1,4 @@
 robotframework
 zeep
-six
 requests
 urllib3
