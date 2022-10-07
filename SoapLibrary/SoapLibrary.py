@@ -49,7 +49,7 @@ class SoapLibrary:
         to the ``auth`` parameter.
 
         If you want to use the binding address in the requests, you need to pass use_binding_address=True
-        in the argment, note that this will only affect the keywords `Call SOAP Method With XML`
+        in the argument, note that this will only affect the keywords `Call SOAP Method With XML`
         and `Call SOAP Method With String XML`
 
         *Example:*
