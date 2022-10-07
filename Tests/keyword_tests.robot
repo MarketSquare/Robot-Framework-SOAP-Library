@@ -35,8 +35,8 @@ Test read
 
 Test read With Binding Address
     [Tags]    calculator
-    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
-    ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml    use_binding_address=True
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False    use_binding_address=True
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 
