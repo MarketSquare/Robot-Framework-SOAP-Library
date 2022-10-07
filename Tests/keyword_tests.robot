@@ -20,10 +20,23 @@ Test Call Soap Method
     ${response}    Call SOAP Method    Add    2    1
     should be equal as integers    3    ${response}
 
+Test Call Soap Method Error
+    [Tags]    calculator
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
+    ${response}    Call SOAP Method    Add    2    X    status=anything
+    Should Contain    ${response}    Input string was not in a correct format.
+
 Test read
     [Tags]    calculator
     Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml
+    ${result}    Get Data From XML By Tag    ${response}    AddResult
+    should be equal    8    ${result}
+
+Test read With Binding Address
+    [Tags]    calculator
+    Create Soap Client    ${wsdl_calculator}    ssl_verify=False
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml    use_binding_address=True
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 

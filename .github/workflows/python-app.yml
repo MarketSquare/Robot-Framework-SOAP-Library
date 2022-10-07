@@ -23,7 +23,7 @@ jobs:
       - name: Install Dependencies
         run: pip install -r requirements.txt
       - name: Run Robot File
-        run: robot -d ./reports ./Tests/keyword_tests.robot
+        run: robot -d ./reports -e offline ./Tests/keyword_tests.robot
       - name: Upload test results
         uses: actions/upload-artifact@v1
         if: always()

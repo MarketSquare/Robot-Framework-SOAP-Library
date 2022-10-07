@@ -67,12 +67,12 @@ class SoapLibrary:
         logger.info('Available operations: %s' % list(operations))
 
     @keyword("Call SOAP Method With XML")
-    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None, use_binding_address=True):
+    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None, use_binding_address=False):
         """
         Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument,
         the SOAP method is inside the XML file.
 
-        By default this keyword fails if a status code different than 200 is returned in the response,
+        By default, this keyword fails if a status code different from 200 is returned as response,
         this behavior can be modified using the argument status=anything
 
         *Input Arguments:*
@@ -80,25 +80,19 @@ class SoapLibrary:
         | xml | file path to xml file |
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
         | status | optional string: anything |
-        | use_binding_address | use service binding address specified in WSDL |
+        | use_binding_address | Boolean to use service binding address specified in WSDL |
 
         *Example:*
-        | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
-        | ${response}= | Call SOAP Method With XML |  C:\\Request_status_500.xml | status=anything |
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml | use_binding_address=True |
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request_status_500.xml | status=anything |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         raw_text_xml = self._convert_xml_to_raw_text(xml)
         xml_obj = etree.fromstring(raw_text_xml)
-        if use_binding_address:
-            response = self.client.transport.post_xml(address=self.client.service._binding_options['address'], envelope=xml_obj, headers=headers)
-        else:
-            response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
+        response = self._send_xml(headers, xml_obj, use_binding_address)
         etree_response = self._parse_from_unicode(response.text)
-        logger.debug('URL: %s' % response.url)
-        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
-        if status is None and response.status_code != 200:
-            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
-        self._print_request_info(etree_response)
+        self._check_and_print_response(response, etree_response, status)
         return etree_response
 
     @keyword("Get Data From XML By Tag")
@@ -116,7 +110,7 @@ class SoapLibrary:
         | index | tag index if there are multiple tags with the same name, starting at 1. Default is set to 1 |
 
         *Examples:*
-        | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag |
         | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |
         """
@@ -138,9 +132,9 @@ class SoapLibrary:
         Changes a field on the given XML to a new given value, the values must be in a dictionary.
         xml_filepath must be a "template" of the request to the webservice.
         new_values_dict must be a dictionary with the keys and values to change.
-        request_name will be the name of the new XMl file generated with the changed request.\n
+        request_name will be the name of the new XMl file generated with the changed request.
 
-        If there is a tag that appears more than once, all occurrences will be replaced by the new value by defaul.
+        If there is a tag that appears more than once, all occurrences will be replaced by the new value by default.
         If you want to change a specific tag, inform the occurrence number in the repeated_tags argument.
 
         Returns the file path of the new Request file.
@@ -180,7 +174,7 @@ class SoapLibrary:
     @keyword("Save XML To File")
     def save_xml_to_file(self, etree_xml, save_folder, file_name):
         """
-        Save the webservice response as a XML file.
+        Save the webservice response as an XML file.
 
         Returns the file path of the newly created xml file.
 
@@ -191,6 +185,7 @@ class SoapLibrary:
         | file_name | name of the new xml file without .xml |
 
         *Example*:
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${response_file}= | Save XML To File |  ${response} | ${CURDIR} | response_file_name |
         """
         new_file_path = self._save_to_file(save_folder, file_name, etree.tostring(etree_xml, pretty_print=True))
@@ -206,6 +201,7 @@ class SoapLibrary:
         | xml_etree | etree object of the xml to convert to dictionary |
 
         *Example:*
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${dict_response}= | Convert XML Response to Dictionary | ${response} |
         """
         # Thanks Jamie Murphy for this code: https://gist.github.com/jacobian/795571
@@ -229,7 +225,7 @@ class SoapLibrary:
         return result
 
     @keyword("Call SOAP Method")
-    def call_soap_method(self, name, *args):
+    def call_soap_method(self, name, *args, status=None):
         """
         If the webservice have simple SOAP operation/method with few arguments, you can call the method with the given
         `name` and `args`.
@@ -237,16 +233,27 @@ class SoapLibrary:
         The first argument of the keyword  ``name``  is the operation name of the ``SOAP operation/method``
         [https://www.soapui.org/soap-and-wsdl/operations-and-requests.html|More information here]
 
+        By default, this keyword fails if a status code different from 200 is returned as response,
+        this behavior can be modified using the argument status=anything
+
         *Input Arguments:*
         | *Name* | *Description* |
         | name | Name of the SOAP operation/method |
         | args | List of request entries |
+        | status | if set as anything, return the error as a string |
 
         *Example:*
         | ${response}= | Call SOAP Method | operation_name | arg1 | arg2 |
+        | ${response}= | Call SOAP Method | operation_name | arg1 | arg2 | status=anything |
         """
         method = getattr(self.client.service, name)
-        response = method(*args)
+        if status is None:
+            response = method(*args)
+        else:
+            try:
+                response = method(*args)
+            except Exception as e:
+                response = str(e)
         return response
 
     @keyword("Decode Base64")
@@ -261,18 +268,19 @@ class SoapLibrary:
         | response | Response of the webservice coded in base64 |
 
         *Example:*
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${response_decoded}= | Decode Base64 | ${response} |
         """
         response_decode = base64.b64decode(response)
         return response_decode.decode('utf-8', 'ignore')
 
     @keyword("Call SOAP Method With String XML")
-    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS, status=None):
+    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS, status=None, use_binding_address=False):
         """
-        Send an string representation of XML as a request to the SOAP client.
+        Send a string representation of XML as a request to the SOAP client.
         The SOAP method is inside the XML string.
 
-        By default this keyword fails if a status code different than 200 is returned in the response,
+        By default, this keyword fails if a status code different from 200 is returned as response,
         this behavior can be modified using the argument status=anything
 
         *Input Arguments:*
@@ -280,20 +288,18 @@ class SoapLibrary:
         | string_xml | string representation of XML |
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
         | status | optional string: anything |
+        | use_binding_address | Boolean to use service binding address specified in WSDL |
 
         *Example:*
         | ${response}= | Call SOAP Method With String XML | "<sample><Id>1</Id></sample>" |
+        | ${response}= | Call SOAP Method With String XML | "<sample><Id>1</Id></sample>" | use_binding_address=True |
         | ${response}= | Call SOAP Method With String XML | "<sample><Id>error</Id></sample>" | status=anything |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
-        response = self.client.transport.post_xml(address=self.client.service._binding_options['address'], envelope=xml_obj, headers=headers)
+        response = self._send_xml(headers, xml_obj, use_binding_address)
         etree_response = self._parse_from_unicode(response.text)
-        logger.debug('URL: %s' % response.url)
-        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
-        if status is None and response.status_code != 200:
-            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
-        self._print_request_info(etree_response)
+        self._check_and_print_response(response, etree_response, status)
         return etree_response
 
     @staticmethod
@@ -338,6 +344,36 @@ class SoapLibrary:
             xpath += self._replace_xpath_by_local_name(tags)
         return xpath
 
+    def _send_xml(self, headers, xml_obj, use_binding_address):
+        """
+        Send the xml file with the client transport, and defines if it uses or not the binding address.
+
+        :param headers: headers of the request
+        :param xml_obj: xml object
+        :param use_binding_address: True or False
+        :return: response of the webservice
+        """
+        if use_binding_address:
+            response = self.client.transport.post_xml(address=self.client.service._binding_options['address'], envelope=xml_obj, headers=headers)
+        else:
+            response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
+        logger.info('Status code: %s' % response.status_code)
+        return response
+
+    def _check_and_print_response(self, response, etree_response, status):
+        """
+        Check if the response is 200 when the status is None and pretty print in the robot log.
+
+        :param response: response object
+        :param etree_response: response object in etree format
+        :param status: if is not None, then don´t raise error
+        """
+        logger.debug('URL: %s' % response.url)
+        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        if status is None and response.status_code != 200:
+            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
+        self._print_request_info(etree_response)
+
     @staticmethod
     def _convert_string_to_xml(xml_string):
         """
@@ -379,6 +415,9 @@ class SoapLibrary:
 
     @staticmethod
     def _print_request_info(etree_response):
+        """
+        Pretty print for robot framework log.
+        """
         log_header_response_from_ws = '<font size="3"><b>Response from webservice:</b></font> '
         logger.info(log_header_response_from_ws, html=True)
         logger.info(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
