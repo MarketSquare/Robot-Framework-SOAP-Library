@@ -80,12 +80,12 @@ class SoapLibrary:
         | xml | file path to xml file |
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
         | status | optional string: anything |
-        | use_binding_address | Boolean: Default as False, use service binding address specified in WSDL |
+        | use_binding_address | Boolean to use service binding address specified in WSDL |
 
         *Example:*
-        | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
-        | ${response}= | Call SOAP Method With XML |  C:\\Request_status_500.xml | status=anything |
-        | ${response}= | Call SOAP Method With XML |  C:\\Request.xml | use_binding_address=True |
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml | use_binding_address=True |
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request_status_500.xml | status=anything |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         raw_text_xml = self._convert_xml_to_raw_text(xml)
@@ -110,7 +110,7 @@ class SoapLibrary:
         | index | tag index if there are multiple tags with the same name, starting at 1. Default is set to 1 |
 
         *Examples:*
-        | ${response}= | Call SOAP Method With XML |  C:\\Request.xml |
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag |
         | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |
         """
@@ -185,6 +185,7 @@ class SoapLibrary:
         | file_name | name of the new xml file without .xml |
 
         *Example*:
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${response_file}= | Save XML To File |  ${response} | ${CURDIR} | response_file_name |
         """
         new_file_path = self._save_to_file(save_folder, file_name, etree.tostring(etree_xml, pretty_print=True))
@@ -200,6 +201,7 @@ class SoapLibrary:
         | xml_etree | etree object of the xml to convert to dictionary |
 
         *Example:*
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${dict_response}= | Convert XML Response to Dictionary | ${response} |
         """
         # Thanks Jamie Murphy for this code: https://gist.github.com/jacobian/795571
@@ -266,6 +268,7 @@ class SoapLibrary:
         | response | Response of the webservice coded in base64 |
 
         *Example:*
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${response_decoded}= | Decode Base64 | ${response} |
         """
         response_decode = base64.b64decode(response)
@@ -285,12 +288,12 @@ class SoapLibrary:
         | string_xml | string representation of XML |
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
         | status | optional string: anything |
-        | use_binding_address | Boolean: Default as False, use service binding address specified in WSDL |
+        | use_binding_address | Boolean to use service binding address specified in WSDL |
 
         *Example:*
         | ${response}= | Call SOAP Method With String XML | "<sample><Id>1</Id></sample>" |
+        | ${response}= | Call SOAP Method With String XML | "<sample><Id>1</Id></sample>" | use_binding_address=True |
         | ${response}= | Call SOAP Method With String XML | "<sample><Id>error</Id></sample>" | status=anything |
-        | ${response}= | Call SOAP Method With String XML | "<sample><Id>error</Id></sample>" | use_binding_address=True |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
