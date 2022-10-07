@@ -14,7 +14,7 @@ with open(version_file) as file:
     exec(code)
 
 setup(name             = 'robotframework-soaplibrary',
-      version          = '1.1',
+      version          = '1.2',
       description      = 'SOAP Library for Robot Framework',
 	  long_description = 'Test library for Robot Framework to create automated test like using SOAPUI',
       author           = 'Altran Portugal',

@@ -30,7 +30,7 @@ class SoapLibrary:
         self.url = None
 
     @keyword("Create SOAP Client")
-    def create_soap_client(self, url, ssl_verify=True, client_cert=None, auth=None):
+    def create_soap_client(self, url, ssl_verify=True, client_cert=None, auth=None, use_binding_address=False):
         """
         Loads a WSDL from the given ``url`` and creates a Zeep client.
         List all Available operations/methods with INFO log level.
@@ -48,9 +48,14 @@ class SoapLibrary:
         For HTTP Basic Authentication, you can pass the list with username and password
         to the ``auth`` parameter.
 
+        If you want to use the binding address in the requests, you need to pass use_binding_address=True
+        in the argment, note that this will only affect the keywords `Call SOAP Method With XML`
+        and `Call SOAP Method With String XML`
+
         *Example:*
         | Create SOAP Client | http://endpoint.com?wsdl |
         | Create SOAP Client | https://endpoint.com?wsdl | ssl_verify=True |
+        | Create SOAP Client | https://endpoint.com?wsdl | use_binding_address=True |
         | Create SOAP Client | https://endpoint.com?wsdl | client_cert=${CURDIR}${/}mycert.pem |
         | ${auth} | Create List | username | password |
         | Create SOAP Client | https://endpoint.com?wsdl | auth=${auth} |
@@ -65,9 +70,11 @@ class SoapLibrary:
         info = self.client.service.__dict__
         operations = info["_operations"]
         logger.info('Available operations: %s' % list(operations))
+        if use_binding_address:
+            self.url = self.client.service._binding_options['address']
 
     @keyword("Call SOAP Method With XML")
-    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None, use_binding_address=False):
+    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None):
         """
         Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument,
         the SOAP method is inside the XML file.
@@ -80,17 +87,16 @@ class SoapLibrary:
         | xml | file path to xml file |
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
         | status | optional string: anything |
-        | use_binding_address | Boolean to use service binding address specified in WSDL |
 
         *Example:*
         | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
-        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml | use_binding_address=True |
         | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request_status_500.xml | status=anything |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         raw_text_xml = self._convert_xml_to_raw_text(xml)
         xml_obj = etree.fromstring(raw_text_xml)
-        response = self._send_xml(headers, xml_obj, use_binding_address)
+        response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
+        logger.info('Status code: %s' % response.status_code)
         etree_response = self._parse_from_unicode(response.text)
         self._check_and_print_response(response, etree_response, status)
         return etree_response
@@ -275,7 +281,7 @@ class SoapLibrary:
         return response_decode.decode('utf-8', 'ignore')
 
     @keyword("Call SOAP Method With String XML")
-    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS, status=None, use_binding_address=False):
+    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS, status=None):
         """
         Send a string representation of XML as a request to the SOAP client.
         The SOAP method is inside the XML string.
@@ -288,16 +294,15 @@ class SoapLibrary:
         | string_xml | string representation of XML |
         | headers | dictionary with request headers. Default ``{'Content-Type': 'text/xml; charset=utf-8'}`` |
         | status | optional string: anything |
-        | use_binding_address | Boolean to use service binding address specified in WSDL |
 
         *Example:*
         | ${response}= | Call SOAP Method With String XML | "<sample><Id>1</Id></sample>" |
-        | ${response}= | Call SOAP Method With String XML | "<sample><Id>1</Id></sample>" | use_binding_address=True |
         | ${response}= | Call SOAP Method With String XML | "<sample><Id>error</Id></sample>" | status=anything |
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
-        response = self._send_xml(headers, xml_obj, use_binding_address)
+        response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
+        logger.info('Status code: %s' % response.status_code)
         etree_response = self._parse_from_unicode(response.text)
         self._check_and_print_response(response, etree_response, status)
         return etree_response
@@ -343,22 +348,6 @@ class SoapLibrary:
         else:
             xpath += self._replace_xpath_by_local_name(tags)
         return xpath
-
-    def _send_xml(self, headers, xml_obj, use_binding_address):
-        """
-        Send the xml file with the client transport, and defines if it uses or not the binding address.
-
-        :param headers: headers of the request
-        :param xml_obj: xml object
-        :param use_binding_address: True or False
-        :return: response of the webservice
-        """
-        if use_binding_address:
-            response = self.client.transport.post_xml(address=self.client.service._binding_options['address'], envelope=xml_obj, headers=headers)
-        else:
-            response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
-        logger.info('Status code: %s' % response.status_code)
-        return response
 
     def _check_and_print_response(self, response, etree_response, status):
         """
