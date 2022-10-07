@@ -17,7 +17,12 @@ class SoapLibrary(SoapLibrary):
         | Library           OperatingSystem
         |
         | ***** Test Cases *****
-        | Example
+        | Simple Example
+        |     Create Soap Client    http://endpoint.com/example.asmx?wsdl
+        |     ${response}    Call SOAP Method    Method_name    arg1    arg2
+        |     Log    ${response}
+        |
+        | Example With XML
         |     Create Soap Client    http://endpoint.com/example.asmx?wsdl
         |     ${response}    Call SOAP Method With XML    ${CURDIR}/request.xml
         |     ${text}    Get Data From XML By Tag    ${response}    tag_name
