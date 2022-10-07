@@ -67,7 +67,7 @@ class SoapLibrary:
         logger.info('Available operations: %s' % list(operations))
 
     @keyword("Call SOAP Method With XML")
-    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None, use_binding_address=True):
+    def call_soap_method_xml(self, xml, headers=DEFAULT_HEADERS, status=None, use_binding_address=False):
         """
         Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument,
         the SOAP method is inside the XML file.
@@ -89,16 +89,9 @@ class SoapLibrary:
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         raw_text_xml = self._convert_xml_to_raw_text(xml)
         xml_obj = etree.fromstring(raw_text_xml)
-        if use_binding_address:
-            response = self.client.transport.post_xml(address=self.client.service._binding_options['address'], envelope=xml_obj, headers=headers)
-        else:
-            response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
+        response = self._send_xml(headers, xml_obj, use_binding_address)
         etree_response = self._parse_from_unicode(response.text)
-        logger.debug('URL: %s' % response.url)
-        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
-        if status is None and response.status_code != 200:
-            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
-        self._print_request_info(etree_response)
+        self._check_and_print_response(response, etree_response, status)
         return etree_response
 
     @keyword("Get Data From XML By Tag")
@@ -229,7 +222,7 @@ class SoapLibrary:
         return result
 
     @keyword("Call SOAP Method")
-    def call_soap_method(self, name, *args):
+    def call_soap_method(self, name, *args, status=None):
         """
         If the webservice have simple SOAP operation/method with few arguments, you can call the method with the given
         `name` and `args`.
@@ -246,7 +239,13 @@ class SoapLibrary:
         | ${response}= | Call SOAP Method | operation_name | arg1 | arg2 |
         """
         method = getattr(self.client.service, name)
-        response = method(*args)
+        if status is None:
+            response = method(*args)
+        else:
+            try:
+                response = method(*args)
+            except Exception as e:
+                response = str(e)
         return response
 
     @keyword("Decode Base64")
@@ -267,7 +266,7 @@ class SoapLibrary:
         return response_decode.decode('utf-8', 'ignore')
 
     @keyword("Call SOAP Method With String XML")
-    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS, status=None):
+    def call_soap_method_string_xml(self, string_xml, headers=DEFAULT_HEADERS, status=None, use_binding_address=False):
         """
         Send an string representation of XML as a request to the SOAP client.
         The SOAP method is inside the XML string.
@@ -287,13 +286,9 @@ class SoapLibrary:
         """
         # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
-        response = self.client.transport.post_xml(address=self.client.service._binding_options['address'], envelope=xml_obj, headers=headers)
+        response = self._send_xml(headers, xml_obj, use_binding_address)
         etree_response = self._parse_from_unicode(response.text)
-        logger.debug('URL: %s' % response.url)
-        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
-        if status is None and response.status_code != 200:
-            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
-        self._print_request_info(etree_response)
+        self._check_and_print_response(response, etree_response, status)
         return etree_response
 
     @staticmethod
@@ -337,6 +332,21 @@ class SoapLibrary:
         else:
             xpath += self._replace_xpath_by_local_name(tags)
         return xpath
+
+    def _send_xml(self, headers, xml_obj, use_binding_address):
+        if use_binding_address:
+            response = self.client.transport.post_xml(address=self.client.service._binding_options['address'], envelope=xml_obj, headers=headers)
+        else:
+            response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
+        logger.info('Status code: %s' % response.status_code)
+        return response
+
+    def _check_and_print_response(self, response, etree_response, status):
+        logger.debug('URL: %s' % response.url)
+        logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
+        if status is None and response.status_code != 200:
+            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
+        self._print_request_info(etree_response)
 
     @staticmethod
     def _convert_string_to_xml(xml_string):
