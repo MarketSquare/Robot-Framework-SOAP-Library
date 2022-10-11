@@ -28,6 +28,7 @@ class SoapLibrary:
     def __init__(self):
         self.client = None
         self.url = None
+        self.response_obj = None
 
     @keyword("Create SOAP Client")
     def create_soap_client(self, url, ssl_verify=True, client_cert=None, auth=None, use_binding_address=False):
@@ -92,11 +93,10 @@ class SoapLibrary:
         | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request_status_500.xml | status=anything |
         """
-        # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         raw_text_xml = self._convert_xml_to_raw_text(xml)
         xml_obj = etree.fromstring(raw_text_xml)
         response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
-        logger.info('Status code: %s' % response.status_code)
+        self._save_response_object(response)
         etree_response = self._parse_from_unicode(response.text)
         self._check_and_print_response(response, etree_response, status)
         return etree_response
@@ -299,13 +299,52 @@ class SoapLibrary:
         | ${response}= | Call SOAP Method With String XML | "<sample><Id>1</Id></sample>" |
         | ${response}= | Call SOAP Method With String XML | "<sample><Id>error</Id></sample>" | status=anything |
         """
-        # TODO check with different headers: 'SOAPAction': self.url + '/%s' % method}
         xml_obj = etree.fromstring(string_xml)
         response = self.client.transport.post_xml(address=self.url, envelope=xml_obj, headers=headers)
-        logger.info('Status code: %s' % response.status_code)
+        self._save_response_object(response)
         etree_response = self._parse_from_unicode(response.text)
         self._check_and_print_response(response, etree_response, status)
         return etree_response
+
+    @keyword("Get Last Response Object")
+    def get_last_response_object(self):
+        """
+        Gets the response object from the last request made. With the object in a variable, you can use the
+        dot operator to get all the attributes of the response.
+
+        Response object attributes:
+        | apparent_encoding |
+        | close |
+        | connection |
+        | content |
+        | cookies |
+        | elapsed |
+        | encoding |
+        | headers |
+        | history |
+        | is_permanent_redirect |
+        | is_redirect |
+        | iter_content |
+        | iter_lines |
+        | json |
+        | links |
+        | next |
+        | ok |
+        | raise_for_status |
+        | raw |
+        | reason |
+        | request |
+        | status_code |
+        | text |
+        | url |
+
+        *Example:*
+        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
+        | ${response_object}= | Get Last Response Object |
+        | ${response_header}= | Set Variable | ${response_object.headers} |
+        | ${response_status}= | Set Variable | ${response_object.status_code} |
+        """
+        return self.response_obj
 
     @staticmethod
     def _convert_xml_to_raw_text(xml_file_path):
@@ -362,6 +401,16 @@ class SoapLibrary:
         if status is None and response.status_code != 200:
             raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
         self._print_request_info(etree_response)
+
+    def _save_response_object(self, response):
+        """
+        Log the response status code in Robot Framework log and save the response object
+        for use in the keyword 'Get Last Response Object'
+
+        :param response, zeep response object
+        """
+        logger.info('Status code: %s' % response.status_code)
+        self.response_obj = response
 
     @staticmethod
     def _convert_string_to_xml(xml_string):
