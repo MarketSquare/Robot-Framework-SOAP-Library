@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec name="SoapLibrary" type="LIBRARY" format="ROBOT" scope="SUITE" generated="2022-10-07T15:38:18Z" specversion="4" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\__init__.py" lineno="4">
-<version>1.1</version>
+<keywordspec name="SoapLibrary" type="LIBRARY" format="ROBOT" scope="SUITE" generated="2022-10-11T14:12:56Z" specversion="4" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\__init__.py" lineno="4">
+<version>1.3</version>
 <doc>SoapLibrary is a library for testing SOAP-based web services.
 
 SoapLibrary is based on [https://python-zeep.readthedocs.io/en/master/|Zeep], a modern SOAP client for Python.
@@ -95,7 +95,7 @@ this behavior can be modified using the argument status=anything
 | ${response}= | Call SOAP Method With String XML | "&lt;sample&gt;&lt;Id&gt;error&lt;/Id&gt;&lt;/sample&gt;" | status=anything |</doc>
 <shortdoc>Send a string representation of XML as a request to the SOAP client. The SOAP method is inside the XML string.</shortdoc>
 </kw>
-<kw name="Call SOAP Method With XML" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="77">
+<kw name="Call SOAP Method With XML" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="78">
 <arguments repr="xml, headers={'Content-Type': 'text/xml; charset=utf-8'}, status=None">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml">
 <name>xml</name>
@@ -143,7 +143,7 @@ this behavior can be modified using the argument status=anything
 | ${dict_response}= | Convert XML Response to Dictionary | ${response} |</doc>
 <shortdoc>Convert the webservice response into a dictionary.</shortdoc>
 </kw>
-<kw name="Create SOAP Client" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="33">
+<kw name="Create SOAP Client" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="34">
 <arguments repr="url, ssl_verify=True, client_cert=None, auth=None, use_binding_address=False">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="url">
 <name>url</name>
@@ -182,7 +182,7 @@ For HTTP Basic Authentication, you can pass the list with username and password
 to the ``auth`` parameter.
 
 If you want to use the binding address in the requests, you need to pass use_binding_address=True
-in the argment, note that this will only affect the keywords `Call SOAP Method With XML`
+in the argument, note that this will only affect the keywords `Call SOAP Method With XML`
 and `Call SOAP Method With String XML`
 
 *Example:*
@@ -281,6 +281,45 @@ Returns the string representation of the value.
 | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag |
 | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |</doc>
 <shortdoc>Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning. The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.</shortdoc>
+</kw>
+<kw name="Get Last Response Object" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="310">
+<arguments repr="">
+</arguments>
+<doc>Gets the response object from the last request made. With the object in a variable, you can use the
+dot operator to get all the attributes of the response.
+
+Response object attributes:
+| apparent_encoding |
+| close |
+| connection |
+| content |
+| cookies |
+| elapsed |
+| encoding |
+| headers |
+| history |
+| is_permanent_redirect |
+| is_redirect |
+| iter_content |
+| iter_lines |
+| json |
+| links |
+| next |
+| ok |
+| raise_for_status |
+| raw |
+| reason |
+| request |
+| status_code |
+| text |
+| url |
+
+*Example:*
+| ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
+| ${response_object}= | Get Last Response Object |
+| ${response_header}= | Set Variable | ${response_object.headers} |
+| ${response_status}= | Set Variable | ${response_object.status_code} |</doc>
+<shortdoc>Gets the response object from the last request made. With the object in a variable, you can use the dot operator to get all the attributes of the response.</shortdoc>
 </kw>
 <kw name="Save XML To File" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="181">
 <arguments repr="etree_xml, save_folder, file_name">
