@@ -81,6 +81,13 @@ Test read utf8
     ${City}    Get Data From XML By Tag    ${response}    City
     should be equal as strings    Fundão    ${City}
 
+Test Get Last Response Object
+    [Tags]    ip2geo
+    Create Soap Client    ${wsdl_ip_geo}
+    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
+    ${response_object}    Get Last Response Object
+    Dictionary Should Contain Key    ${response_object.headers}    Content-Type
+
 Test Save File Response
     [Tags]    ip2geo
     Remove File    ${CURDIR}${/}response_test.xml
