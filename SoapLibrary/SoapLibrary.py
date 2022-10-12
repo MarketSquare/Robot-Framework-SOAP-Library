@@ -50,8 +50,7 @@ class SoapLibrary:
         to the ``auth`` parameter.
 
         If you want to use the binding address in the requests, you need to pass use_binding_address=True
-        in the argument, note that this will only affect the keywords `Call SOAP Method With XML`
-        and `Call SOAP Method With String XML`
+        in the argument.
 
         *Example:*
         | Create SOAP Client | http://endpoint.com?wsdl |
@@ -248,6 +247,10 @@ class SoapLibrary:
         | args | List of request entries |
         | status | if set as anything, return the error as a string |
 
+        Note, this keyword uses the most basic method of sending a request, through zeep that creates the xml based
+        on the wsdl definition. So this keyword does not store the response object, and therefore it is not possible
+        to use the keyword `Get Last Response Object` after this one.
+
         *Example:*
         | ${response}= | Call SOAP Method | operation_name | arg1 | arg2 |
         | ${response}= | Call SOAP Method | operation_name | arg1 | arg2 | status=anything |
@@ -337,6 +340,9 @@ class SoapLibrary:
         | status_code |
         | text |
         | url |
+
+        Note, this keyword only works after the execution of `Call SOAP Method With XML`
+        or `Call SOAP Method With String XML`
 
         *Example:*
         | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
