@@ -36,12 +36,10 @@ class SoapLibrary:
         Loads a WSDL from the given ``url`` and creates a Zeep client.
         List all Available operations/methods with INFO log level.
 
-        By default, server TLS certificate is validated. You can disable this behavior
-        by setting ``ssl_verify`` to ``False`` (not recommended!).
-        If your host uses a self-signed certificate, you can also pass the path of the
+        By default, server TLS certificate is validated. You can disable this behavior by setting ``ssl_verify``
+        to ``False`` (not recommended!). If your host uses a self-signed certificate, you can also pass the path of the
         CA_BUNDLE to ``sll_verify``. Accepted are only X.509 ASCII files (file extension .pem, sometimes .crt).
-        If you have two different files for root and intermediate certificate,
-        you must combine them manually into one.
+        If you have two different files for root and intermediate certificate, you must combine them manually into one.
 
         If your host requires client certificate based authentication, you can pass the
         path to your client certificate to the ``client_cert`` argument.
@@ -49,8 +47,8 @@ class SoapLibrary:
         For HTTP Basic Authentication, you can pass the list with username and password
         to the ``auth`` parameter.
 
-        If you want to use the binding address in the requests, you need to pass use_binding_address=True
-        in the argument.
+        If you want to use the binding address in the requests, you need to pass use_binding_address=True in
+        the argument.
 
         *Example:*
         | Create SOAP Client | http://endpoint.com?wsdl |
@@ -80,7 +78,7 @@ class SoapLibrary:
         the SOAP method is inside the XML file.
 
         By default, this keyword fails if a status code different from 200 is returned as response,
-        this behavior can be modified using the argument status=anything
+        this behavior can be modified using the argument status=anything.
 
         *Input Arguments:*
         | *Name* | *Description* |
@@ -103,8 +101,9 @@ class SoapLibrary:
     @keyword("Get Data From XML By Tag")
     def get_data_from_xml_tag(self, xml, tag, index=1):
         """
-        Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning.
-        The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.
+        Gets data from XML using a given tag.
+        If the tag returns zero or more than one result, it will show a warning. The xml argument must be an
+        etree object, can be used with the return of the keyword `Call SOAP Method With XML`.
 
         Returns the string representation of the value.
 
@@ -134,10 +133,9 @@ class SoapLibrary:
     @keyword("Edit XML Request")
     def edit_xml(self, xml_file_path, new_values_dict, edited_request_name, repeated_tags='All'):
         """
-        Changes a field on the given XML to a new given value, the values must be in a dictionary.
-        xml_filepath must be a "template" of the request to the webservice.
-        new_values_dict must be a dictionary with the keys and values to change.
-        request_name will be the name of the new XMl file generated with the changed request.
+        Changes a field on the given XML to a new given value, the values must be in a dictionary xml_filepath must be
+        a "template" of the request to the webservice. new_values_dict must be a dictionary with the keys
+        and values to change. request_name will be the name of the new XMl file generated with the changed request.
 
         If there is a tag that appears more than once, all occurrences will be replaced by the new value by default.
         If you want to change a specific tag, inform the occurrence number in the repeated_tags argument.
@@ -209,7 +207,7 @@ class SoapLibrary:
         | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
         | ${dict_response}= | Convert XML Response to Dictionary | ${response} |
         """
-        # Thanks Jamie Murphy for this code: https://gist.github.com/jacobian/795571
+        # Thanks to Jamie Murphy for this code: https://gist.github.com/jacobian/795571
         result = {}
         for element in xml_etree.iterchildren():
             # Remove namespace prefix
@@ -239,7 +237,7 @@ class SoapLibrary:
         [https://www.soapui.org/soap-and-wsdl/operations-and-requests.html|More information here]
 
         By default, this keyword fails if a status code different from 200 is returned as response,
-        this behavior can be modified using the argument status=anything
+        this behavior can be modified using the argument status=anything.
 
         *Input Arguments:*
         | *Name* | *Description* |
@@ -270,7 +268,7 @@ class SoapLibrary:
         """
         Decodes texts that are base64 encoded.
 
-        Returns the decoded response
+        Returns the decoded response.
 
         *Input Arguments:*
         | *Name* | *Description* |
@@ -290,7 +288,7 @@ class SoapLibrary:
         The SOAP method is inside the XML string.
 
         By default, this keyword fails if a status code different from 200 is returned as response,
-        this behavior can be modified using the argument status=anything
+        this behavior can be modified using the argument status=anything.
 
         *Input Arguments:*
         | *Name* | *Description* |
@@ -341,11 +339,11 @@ class SoapLibrary:
         | text |
         | url |
 
-        Note, this keyword only works after the execution of `Call SOAP Method With XML`
-        or `Call SOAP Method With String XML`
+        Note, this keyword only works after the execution of `Call SOAP Method With XML` or
+        `Call SOAP Method With String XML`.
 
         *Example:*
-        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
+        | ${response}= | Call SOAP Method With XML | ${CURDIR}${/}Request.xml |
         | ${response_object}= | Get Last Response Object |
         | ${response_header}= | Set Variable | ${response_object.headers} |
         | ${response_status}= | Set Variable | ${response_object.status_code} |
@@ -357,8 +355,8 @@ class SoapLibrary:
         """
         Converts a xml file into a string.
 
-        :param xml_file_path: xml file path
-        :return: string with xml content
+        :param xml_file_path: xml file path.
+        :return: string with xml content.
         """
         file_content = open(xml_file_path, 'r')
         xml = ''
@@ -372,8 +370,8 @@ class SoapLibrary:
         """
         Parses a unicode string.
         
-        :param unicode_str: unicode string
-        :return: parsed string
+        :param unicode_str: unicode string.
+        :return: parsed string.
         """
         utf8_parser = etree.XMLParser(encoding='utf-8')
         string_utf8 = unicode_str.encode('utf-8')
@@ -383,8 +381,8 @@ class SoapLibrary:
         """
         Parses a single xpath or a list of xml tags.
 
-        :param tags: string for a single xml tag or list for multiple xml tags
-        :return: parsed xpath
+        :param tags: string for a single xml tag or list for multiple xml tags.
+        :return: parsed xpath.
         """
         xpath = ''
         if isinstance(tags, list):
@@ -398,9 +396,9 @@ class SoapLibrary:
         """
         Check if the response is 200 when the status is None and pretty print in the robot log.
 
-        :param response: response object
-        :param etree_response: response object in etree format
-        :param status: if is not None, then don´t raise error
+        :param response: response object.
+        :param etree_response: response object in etree format.
+        :param status: if is not None, then don´t raise error.
         """
         logger.debug('URL: %s' % response.url)
         logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
@@ -413,7 +411,7 @@ class SoapLibrary:
         Log the response status code in Robot Framework log and save the response object
         for use in the keyword 'Get Last Response Object'
 
-        :param response, zeep response object
+        :param response, zeep response object.
         """
         logger.info('Status code: %s' % response.status_code)
         self.response_obj = response
@@ -423,19 +421,19 @@ class SoapLibrary:
         """
         Converts a given string to xml object using etree.
         
-        :param xml_string: string with xml content
-        :return: xml object
+        :param xml_string: string with xml content.
+        :return: xml object.
         """
         return etree.fromstring(xml_string)
 
     @staticmethod
     def _replace_xpath_by_local_name(xpath_tag):
         """
-        Replaces the given xpath_tag in an xpath using name() function.
+        Replaces the given xpath_tag in a xpath using name() function.
         Returns the replaced xpath.
 
-        :param xpath_tag: tag to replace with in xpath
-        :return: replaced xpath tag
+        :param xpath_tag: tag to replace with in xpath.
+        :return: replaced xpath tag.
         """
         local_name_xpath = "//*[name()='%s']"
         return local_name_xpath % xpath_tag
@@ -445,10 +443,10 @@ class SoapLibrary:
         """
         Saves text into a new file.
 
-        :param save_folder: folder to save the new xml file
-        :param file_name: name of the new file
-        :param text: file text
-        :return new file path
+        :param save_folder: folder to save the new xml file.
+        :param file_name: name of the new file.
+        :param text: file text.
+        :return new file path.
         """
         new_file_name = "%s.xml" % file_name
         new_file_path = os.path.join(save_folder, new_file_name)

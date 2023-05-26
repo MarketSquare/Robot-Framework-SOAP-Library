@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<keywordspec name="SoapLibrary" type="LIBRARY" format="ROBOT" scope="SUITE" generated="2022-10-12T14:35:47Z" specversion="4" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\__init__.py" lineno="4">
+<keywordspec name="SoapLibrary" type="LIBRARY" format="ROBOT" scope="SUITE" generated="2023-05-26T13:25:23+00:00" specversion="4" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\__init__.py" lineno="4">
 <version>1.3</version>
 <doc>SoapLibrary is a library for testing SOAP-based web services.
 
@@ -31,7 +31,7 @@ make a request through an XML file, and receive the response in another XML file
 <inits>
 </inits>
 <keywords>
-<kw name="Call SOAP Method" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="233">
+<kw name="Call SOAP Method" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="231">
 <arguments repr="name, *args, status=None">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="name">
 <name>name</name>
@@ -51,7 +51,7 @@ The first argument of the keyword  ``name``  is the operation name of the ``SOAP
 [https://www.soapui.org/soap-and-wsdl/operations-and-requests.html|More information here]
 
 By default, this keyword fails if a status code different from 200 is returned as response,
-this behavior can be modified using the argument status=anything
+this behavior can be modified using the argument status=anything.
 
 *Input Arguments:*
 | *Name* | *Description* |
@@ -68,7 +68,7 @@ to use the keyword `Get Last Response Object` after this one.
 | ${response}= | Call SOAP Method | operation_name | arg1 | arg2 | status=anything |</doc>
 <shortdoc>If the webservice have simple SOAP operation/method with few arguments, you can call the method with the given `name` and `args`.</shortdoc>
 </kw>
-<kw name="Call SOAP Method With String XML" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="287">
+<kw name="Call SOAP Method With String XML" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="285">
 <arguments repr="string_xml, headers={'Content-Type': 'text/xml; charset=utf-8'}, status=None">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="string_xml">
 <name>string_xml</name>
@@ -86,7 +86,7 @@ to use the keyword `Get Last Response Object` after this one.
 The SOAP method is inside the XML string.
 
 By default, this keyword fails if a status code different from 200 is returned as response,
-this behavior can be modified using the argument status=anything
+this behavior can be modified using the argument status=anything.
 
 *Input Arguments:*
 | *Name* | *Description* |
@@ -99,7 +99,7 @@ this behavior can be modified using the argument status=anything
 | ${response}= | Call SOAP Method With String XML | "&lt;sample&gt;&lt;Id&gt;error&lt;/Id&gt;&lt;/sample&gt;" | status=anything |</doc>
 <shortdoc>Send a string representation of XML as a request to the SOAP client. The SOAP method is inside the XML string.</shortdoc>
 </kw>
-<kw name="Call SOAP Method With XML" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="77">
+<kw name="Call SOAP Method With XML" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="75">
 <arguments repr="xml, headers={'Content-Type': 'text/xml; charset=utf-8'}, status=None">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml">
 <name>xml</name>
@@ -117,7 +117,7 @@ this behavior can be modified using the argument status=anything
 the SOAP method is inside the XML file.
 
 By default, this keyword fails if a status code different from 200 is returned as response,
-this behavior can be modified using the argument status=anything
+this behavior can be modified using the argument status=anything.
 
 *Input Arguments:*
 | *Name* | *Description* |
@@ -130,7 +130,7 @@ this behavior can be modified using the argument status=anything
 | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request_status_500.xml | status=anything |</doc>
 <shortdoc>Send an XML file as a request to the SOAP client. The path to the Request XML file is required as argument, the SOAP method is inside the XML file.</shortdoc>
 </kw>
-<kw name="Convert XML Response to Dictionary" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="200">
+<kw name="Convert XML Response to Dictionary" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="198">
 <arguments repr="xml_etree">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml_etree">
 <name>xml_etree</name>
@@ -172,12 +172,10 @@ this behavior can be modified using the argument status=anything
 <doc>Loads a WSDL from the given ``url`` and creates a Zeep client.
 List all Available operations/methods with INFO log level.
 
-By default, server TLS certificate is validated. You can disable this behavior
-by setting ``ssl_verify`` to ``False`` (not recommended!).
-If your host uses a self-signed certificate, you can also pass the path of the
+By default, server TLS certificate is validated. You can disable this behavior by setting ``ssl_verify``
+to ``False`` (not recommended!). If your host uses a self-signed certificate, you can also pass the path of the
 CA_BUNDLE to ``sll_verify``. Accepted are only X.509 ASCII files (file extension .pem, sometimes .crt).
-If you have two different files for root and intermediate certificate,
-you must combine them manually into one.
+If you have two different files for root and intermediate certificate, you must combine them manually into one.
 
 If your host requires client certificate based authentication, you can pass the
 path to your client certificate to the ``client_cert`` argument.
@@ -185,8 +183,8 @@ path to your client certificate to the ``client_cert`` argument.
 For HTTP Basic Authentication, you can pass the list with username and password
 to the ``auth`` parameter.
 
-If you want to use the binding address in the requests, you need to pass use_binding_address=True
-in the argument.
+If you want to use the binding address in the requests, you need to pass use_binding_address=True in
+the argument.
 
 *Example:*
 | Create SOAP Client | http://endpoint.com?wsdl |
@@ -197,7 +195,7 @@ in the argument.
 | Create SOAP Client | https://endpoint.com?wsdl | auth=${auth} |</doc>
 <shortdoc>Loads a WSDL from the given ``url`` and creates a Zeep client. List all Available operations/methods with INFO log level.</shortdoc>
 </kw>
-<kw name="Decode Base64" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="269">
+<kw name="Decode Base64" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="267">
 <arguments repr="response">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="response">
 <name>response</name>
@@ -205,7 +203,7 @@ in the argument.
 </arguments>
 <doc>Decodes texts that are base64 encoded.
 
-Returns the decoded response
+Returns the decoded response.
 
 *Input Arguments:*
 | *Name* | *Description* |
@@ -216,7 +214,7 @@ Returns the decoded response
 | ${response_decoded}= | Decode Base64 | ${response} |</doc>
 <shortdoc>Decodes texts that are base64 encoded.</shortdoc>
 </kw>
-<kw name="Edit XML Request" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="135">
+<kw name="Edit XML Request" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="134">
 <arguments repr="xml_file_path, new_values_dict, edited_request_name, repeated_tags=All">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml_file_path">
 <name>xml_file_path</name>
@@ -232,10 +230,9 @@ Returns the decoded response
 <default>All</default>
 </arg>
 </arguments>
-<doc>Changes a field on the given XML to a new given value, the values must be in a dictionary.
-xml_filepath must be a "template" of the request to the webservice.
-new_values_dict must be a dictionary with the keys and values to change.
-request_name will be the name of the new XMl file generated with the changed request.
+<doc>Changes a field on the given XML to a new given value, the values must be in a dictionary xml_filepath must be
+a "template" of the request to the webservice. new_values_dict must be a dictionary with the keys
+and values to change. request_name will be the name of the new XMl file generated with the changed request.
 
 If there is a tag that appears more than once, all occurrences will be replaced by the new value by default.
 If you want to change a specific tag, inform the occurrence number in the repeated_tags argument.
@@ -253,9 +250,9 @@ Returns the file path of the new Request file.
 | ${dict}= | Create Dictionary | tag_name1=SomeText | tag_name2=OtherText |
 | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request |
 | ${xml_edited}= | Edit XML Request | request_filepath | ${dict} | New_Request | repeated_tags=0 |</doc>
-<shortdoc>Changes a field on the given XML to a new given value, the values must be in a dictionary. xml_filepath must be a "template" of the request to the webservice. new_values_dict must be a dictionary with the keys and values to change. request_name will be the name of the new XMl file generated with the changed request.</shortdoc>
+<shortdoc>Changes a field on the given XML to a new given value, the values must be in a dictionary xml_filepath must be a "template" of the request to the webservice. new_values_dict must be a dictionary with the keys and values to change. request_name will be the name of the new XMl file generated with the changed request.</shortdoc>
 </kw>
-<kw name="Get Data From XML By Tag" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="104">
+<kw name="Get Data From XML By Tag" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="102">
 <arguments repr="xml, tag, index=1">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="xml">
 <name>xml</name>
@@ -268,8 +265,9 @@ Returns the file path of the new Request file.
 <default>1</default>
 </arg>
 </arguments>
-<doc>Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning.
-The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.
+<doc>Gets data from XML using a given tag.
+If the tag returns zero or more than one result, it will show a warning. The xml argument must be an
+etree object, can be used with the return of the keyword `Call SOAP Method With XML`.
 
 Returns the string representation of the value.
 
@@ -285,7 +283,7 @@ Returns the string representation of the value.
 | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |</doc>
 <shortdoc>Gets data from XML using a given tag. If the tag returns zero or more than one result, it will show a warning. The xml argument must be an etree object, can be used with the return of the keyword `Call SOAP Method With XML`.</shortdoc>
 </kw>
-<kw name="Get Last Response Object" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="313">
+<kw name="Get Last Response Object" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="311">
 <arguments repr="">
 </arguments>
 <doc>Gets the response object from the last request made. With the object in a variable, you can use the
@@ -317,17 +315,17 @@ Response object attributes:
 | text |
 | url |
 
-Note, this keyword only works after the execution of `Call SOAP Method With XML`
-or `Call SOAP Method With String XML`
+Note, this keyword only works after the execution of `Call SOAP Method With XML` or
+`Call SOAP Method With String XML`.
 
 *Example:*
-| ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
+| ${response}= | Call SOAP Method With XML | ${CURDIR}${/}Request.xml |
 | ${response_object}= | Get Last Response Object |
 | ${response_header}= | Set Variable | ${response_object.headers} |
 | ${response_status}= | Set Variable | ${response_object.status_code} |</doc>
 <shortdoc>Gets the response object from the last request made. With the object in a variable, you can use the dot operator to get all the attributes of the response.</shortdoc>
 </kw>
-<kw name="Save XML To File" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="180">
+<kw name="Save XML To File" source="C:\Repos\Robot-Framework-SOAP-Library\SoapLibrary\SoapLibrary.py" lineno="178">
 <arguments repr="etree_xml, save_folder, file_name">
 <arg kind="POSITIONAL_OR_NAMED" required="true" repr="etree_xml">
 <name>etree_xml</name>
