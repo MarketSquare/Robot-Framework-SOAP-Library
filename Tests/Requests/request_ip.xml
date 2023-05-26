@@ -1,9 +1,0 @@
-<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ws="http://ws.cdyne.com/">
-   <soapenv:Header/>
-   <soapenv:Body>
-      <ws:ResolveIP>
-         <ws:ipAddress>83.240.240.198</ws:ipAddress>
-         <ws:licenseKey></ws:licenseKey>
-      </ws:ResolveIP>
-   </soapenv:Body>
-</soapenv:Envelope>

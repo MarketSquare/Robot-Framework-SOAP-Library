@@ -8,7 +8,7 @@ Library           Process
 *** Variables ***
 ${requests_dir}                      ${CURDIR}${/}Requests
 ${wsdl_correios_price_calculator}    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
-${wsdl_ip_geo}                       http://ws.cdyne.com/ip2geo/ip2geo.asmx?wsdl
+${wsdl_country_info}                 http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?wsdl
 ${wsdl_calculator}                   https://ecs.syr.edu/faculty/fawcett/Handouts/cse775/code/calcWebService/Calc.asmx?wsdl
 ${request_string}                    <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><Add xmlns="http://tempuri.org/"><a>5</a><b>3</b></Add></Body></Envelope>
 ${request_string_500}                <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><Add xmlns="http://tempuri.org/"><a>a</a><b>3</b></Add></Body></Envelope>
@@ -75,24 +75,27 @@ Test Call SOAP Method with String XML Anything
     Should Contain    ${result}    Server was unable to read request.
 
 Test read utf8
-    [Tags]    ip2geo
-    Create Soap Client    ${wsdl_ip_geo}
-    ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
-    ${City}    Get Data From XML By Tag    ${response}    City
-    should be equal as strings    Fundão    ${City}
+    [Tags]    country_info
+    #todo find an API with response in utf8
+    Create Soap Client    ${wsdl_country_info}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_capital.xml
+    ${City}    Get Data From XML By Tag    ${response}    m:CapitalCityResult
+    should be equal as strings    ${City}    Lisbon
 
 Test Get Last Response Object
-    [Tags]    ip2geo
-    Create Soap Client    ${wsdl_ip_geo}
-    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
+    [Tags]    country_info
+    Create Soap Client    ${wsdl_country_info}
+    Call SOAP Method With XML    ${requests_dir}${/}request_capital.xml
     ${response_object}    Get Last Response Object
+    Should Be Equal As Integers    ${response_object.status_code}    200
+    Should Contain    ${response_object.text}    Lisbon
     Dictionary Should Contain Key    ${response_object.headers}    Content-Type
 
 Test Save File Response
-    [Tags]    ip2geo
+    [Tags]    country_info
     Remove File    ${CURDIR}${/}response_test.xml
-    Create Soap Client    ${wsdl_ip_geo}
-    ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_ip.xml
+    Create Soap Client    ${wsdl_country_info}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}request_capital.xml
     ${file}    Save XML To File    ${response}    ${CURDIR}    response_test
     Should Exist    ${CURDIR}${/}response_test.xml
 
