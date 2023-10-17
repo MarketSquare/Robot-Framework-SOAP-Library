@@ -1,5 +1,5 @@
 requests==2.31.0
 robotframework==5.0.1
-urllib3==1.26.11
+urllib3==1.26.18
 zeep==4.1.0
 lxml==4.9.1
