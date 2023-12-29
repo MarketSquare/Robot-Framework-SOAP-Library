@@ -6,12 +6,12 @@ Library           XML    use_lxml=True
 Library           Process
 
 *** Variables ***
-${requests_dir}                      ${CURDIR}${/}Requests
-${wsdl_correios_price_calculator}    http://ws.correios.com.br/calculador/CalcPrecoPrazo.asmx?wsdl
-${wsdl_country_info}                 http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?wsdl
-${wsdl_calculator}                   https://ecs.syr.edu/faculty/fawcett/Handouts/cse775/code/calcWebService/Calc.asmx?wsdl
-${request_string}                    <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><Add xmlns="http://tempuri.org/"><a>5</a><b>3</b></Add></Body></Envelope>
-${request_string_500}                <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><Add xmlns="http://tempuri.org/"><a>a</a><b>3</b></Add></Body></Envelope>
+${requests_dir}          ${CURDIR}${/}Requests
+${wsdl_correios}         https://apphom.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl
+${wsdl_country_info}     http://webservices.oorsprong.org/websamples.countryinfo/CountryInfoService.wso?wsdl
+${wsdl_calculator}       https://ecs.syr.edu/faculty/fawcett/Handouts/cse775/code/calcWebService/Calc.asmx?wsdl
+${request_string}        <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><Add xmlns="http://tempuri.org/"><a>5</a><b>3</b></Add></Body></Envelope>
+${request_string_500}    <Envelope xmlns="http://schemas.xmlsoap.org/soap/envelope/"><Body><Add xmlns="http://tempuri.org/"><a>a</a><b>3</b></Add></Body></Envelope>
 
 *** Test Cases ***
 Test Call Soap Method
@@ -26,28 +26,28 @@ Test Call Soap Method Error
     ${response}    Call SOAP Method    Add    2    X    status=anything
     Should Contain    ${response}    Input string was not in a correct format.
 
-Test read
+Test Read
     [Tags]    calculator
     Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 
-Test read With Binding Address
+Test Read With Binding Address
     [Tags]    calculator
     Create Soap Client    ${wsdl_calculator}    ssl_verify=False    use_binding_address=True
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_Calculator.xml
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 
-Test read string xml
+Test Read String Xml
     [Tags]    calculator
     Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With String XML  ${request_string}
     ${result}    Get Data From XML By Tag    ${response}    AddResult
     should be equal    8    ${result}
 
-Test Edit and Read
+Test Edit And Read
     [Tags]    calculator
     Remove File    ${requests_dir}${/}New_Request_Calculator.xml
     Create Soap Client    ${wsdl_calculator}    ssl_verify=False
@@ -58,7 +58,7 @@ Test Edit and Read
     should be equal    14    ${result}
     Should Exist    ${requests_dir}${/}New_Request_Calculator.xml
 
-Test Call SOAP Method with XML Anything
+Test Call Soap Method With XML Anything
     [Tags]    calculator
     Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With XML  ${requests_dir}${/}Request_Calculator_500.xml    status=anything
@@ -66,7 +66,7 @@ Test Call SOAP Method with XML Anything
     log    ${result}
     Should Contain    ${result}    Server was unable to read request.
 
-Test Call SOAP Method with String XML Anything
+Test Call SOAP Method With String XML Anything
     [Tags]    calculator
     Create Soap Client    ${wsdl_calculator}    ssl_verify=False
     ${response}    Call SOAP Method With String XML  ${request_string_500}    status=anything
@@ -74,7 +74,7 @@ Test Call SOAP Method with String XML Anything
     log    ${result}
     Should Contain    ${result}    Server was unable to read request.
 
-Test read utf8
+Test Read UTF8
     [Tags]    country_info
     #todo find an API with response in utf8
     Create Soap Client    ${wsdl_country_info}
@@ -99,27 +99,25 @@ Test Save File Response
     ${file}    Save XML To File    ${response}    ${CURDIR}    response_test
     Should Exist    ${CURDIR}${/}response_test.xml
 
-Test Read tags with index
+Test Read Tags With Index
     [Tags]    correios
-    Create Soap Client    ${wsdl_correios_price_calculator}
-    ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_ListaServicos.xml
-    ${codigo}    Get Data From XML By Tag    ${response}    codigo    index=99
-    should be equal as integers    11835    ${codigo}
+    Create Soap Client    ${wsdl_correios}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}busca_servicos.xml
+    ${codigo}    Get Data From XML By Tag    ${response}    codigo    index=33
+    Should Be Equal As Integers    ${codigo}    03336
 
-Test Response to Dict
+Test Response To Dict
     [Tags]    correios
-    Create Soap Client    ${wsdl_correios_price_calculator}
-    ${response}    Call SOAP Method With XML    ${requests_dir}${/}Request_CalcPrecoPrazo.xml
+    Create Soap Client    ${wsdl_correios}
+    ${response}    Call SOAP Method With XML    ${requests_dir}${/}consultaCEP.xml
     ${dict_response}    Convert XML Response to Dictionary    ${response}
     ${type}    evaluate    str(type(${dict_response}))
     Should Contain    ${type}    'dict'
     ${body}    Get From Dictionary    ${dict_response}    Body
-    ${calcprecoprazoresponse}    Get From Dictionary    ${body}    CalcPrecoPrazoResponse
-    ${calcprecoprazoresult}    Get From Dictionary    ${calcprecoprazoresponse}    CalcPrecoPrazoResult
-    ${servicos}    Get From Dictionary    ${calcprecoprazoresult}    Servicos
-    ${cservico}    Get From Dictionary    ${servicos}    cServico
-    ${valorsemadicionais}    Get From Dictionary    ${cservico}    ValorSemAdicionais
-    should be equal    24,90    ${valorsemadicionais}
+    ${city}    Set Variable    ${dict_response}[Body][consultaCEPResponse][return][cidade]
+    ${uf}    Set Variable    ${dict_response}[Body][consultaCEPResponse][return][uf]
+    Should Be Equal    ${city}    Palhoça
+    Should Be Equal    ${uf}    SC
 
 Test Edit XML Request 1
     [Tags]    edit_xml

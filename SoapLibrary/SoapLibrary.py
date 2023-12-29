@@ -87,8 +87,8 @@ class SoapLibrary:
         | status | optional string: anything |
 
         *Example:*
-        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
-        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request_status_500.xml | status=anything |
+        | ${response}= | Call SOAP Method With XML | ${CURDIR}${/}Request.xml |
+        | ${response}= | Call SOAP Method With XML | ${CURDIR}${/}Request_status_500.xml | status=anything |
         """
         raw_text_xml = self._convert_xml_to_raw_text(xml)
         xml_obj = etree.fromstring(raw_text_xml)
@@ -114,9 +114,9 @@ class SoapLibrary:
         | index | tag index if there are multiple tags with the same name, starting at 1. Default is set to 1 |
 
         *Examples:*
-        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
-        | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag |
-        | ${value}= | Get Data From XML By Tag |  ${response} | SomeTag | index=9 |
+        | ${response}= | Call SOAP Method With XML | ${CURDIR}${/}Request.xml |
+        | ${value}= | Get Data From XML By Tag | ${response} | SomeTag |
+        | ${value}= | Get Data From XML By Tag | ${response} | SomeTag | index=9 |
         """
         new_index = index - 1
         xpath = self._parse_xpath(tag)
@@ -126,8 +126,8 @@ class SoapLibrary:
         if len(data_list) == 0:
             logger.warn('The search "%s" did not return any result! Please confirm the tag!' % xpath)
         elif len(data_list) > 1:
-            logger.warn('The tag you entered found %s items, returning the text in the index '
-                        'number %s, if you want a different index inform the argument index=N' % (len(data_list), index))
+            logger.debug('The tag you entered found %s items, returning the text in the index '
+                         'number %s, if you want a different index inform the argument index=N' % (len(data_list), index))
         return data_list[new_index].text
 
     @keyword("Edit XML Request")
@@ -188,8 +188,8 @@ class SoapLibrary:
         | file_name | name of the new xml file without .xml |
 
         *Example*:
-        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
-        | ${response_file}= | Save XML To File |  ${response} | ${CURDIR} | response_file_name |
+        | ${response}= | Call SOAP Method With XML | ${CURDIR}${/}Request.xml |
+        | ${response_file}= | Save XML To File | ${response} | ${CURDIR} | response_file_name |
         """
         new_file_path = self._save_to_file(save_folder, file_name, etree.tostring(etree_xml, pretty_print=True))
         return new_file_path
@@ -204,7 +204,7 @@ class SoapLibrary:
         | xml_etree | etree object of the xml to convert to dictionary |
 
         *Example:*
-        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
+        | ${response}= | Call SOAP Method With XML | ${CURDIR}${/}Request.xml |
         | ${dict_response}= | Convert XML Response to Dictionary | ${response} |
         """
         # Thanks to Jamie Murphy for this code: https://gist.github.com/jacobian/795571
@@ -275,7 +275,7 @@ class SoapLibrary:
         | response | Response of the webservice coded in base64 |
 
         *Example:*
-        | ${response}= | Call SOAP Method With XML |  ${CURDIR}${/}Request.xml |
+        | ${response}= | Call SOAP Method With XML | ${CURDIR}${/}Request.xml |
         | ${response_decoded}= | Decode Base64 | ${response} |
         """
         response_decode = base64.b64decode(response)
