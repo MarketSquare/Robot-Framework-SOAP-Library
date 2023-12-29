@@ -1,7 +1,7 @@
 [![PyPi downloads](https://img.shields.io/pypi/dm/robotframework-soaplibrary.svg)](https://pypi.org/project/robotframework-soaplibrary)
 [![Total downloads](https://static.pepy.tech/personalized-badge/robotframework-soaplibrary?period=total&units=international_system&left_color=lightgrey&right_color=yellow&left_text=Total)](https://pypi.org/project/robotframework-soaplibrary)
 [![Latest Version](https://img.shields.io/pypi/v/robotframework-soaplibrary.svg)](https://pypi.org/project/robotframework-soaplibrary)
-[![Tests](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/actions/workflows/python-app.yml)
+[![tests](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/actions/workflows/python-app.yml)
 
 
 # Robot-Framework-SOAP-Library
