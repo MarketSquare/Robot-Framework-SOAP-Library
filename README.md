@@ -53,7 +53,7 @@ You can see [here](https://michaelhallik.github.io/blog/2022/04/10/Using-OpenSSL
 You can find the keywords documentation [here](https://raw.githack.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/master/Doc/SoapLibrary.html)     
 
 ## Authors
-   - **Altran -** [Altran Web Site](https://www.altran.com/us/en/)
+Initial development was sponsored by [Capgemini Engineering](https://www.capgemini.com/about-us/who-we-are/our-brands/capgemini-engineering/)
    - **Samuel Cabral**
    - **Joao Gomes**
    
