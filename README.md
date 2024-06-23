@@ -1,7 +1,7 @@
 [![PyPi downloads](https://img.shields.io/pypi/dm/robotframework-soaplibrary.svg)](https://pypi.org/project/robotframework-soaplibrary)
 [![Total downloads](https://static.pepy.tech/personalized-badge/robotframework-soaplibrary?period=total&units=international_system&left_color=lightgrey&right_color=yellow&left_text=Total)](https://pypi.org/project/robotframework-soaplibrary)
 [![Latest Version](https://img.shields.io/pypi/v/robotframework-soaplibrary.svg)](https://pypi.org/project/robotframework-soaplibrary)
-[![tests](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/actions/workflows/python-app.yml)
+[![tests](https://github.com/MarketSquare/Robot-Framework-SOAP-Library/actions/workflows/python-app.yml/badge.svg?branch=master)](https://github.com/MarketSquare/Robot-Framework-SOAP-Library/actions/workflows/python-app.yml)
 
 
 # Robot-Framework-SOAP-Library
@@ -9,17 +9,17 @@ SOAP Library for Robot Framework
 
 ## Compatibility
 - _Python 3.7 +_
-- _Zeep 3.1.0 +_ 
+- _Zeep 4.2.1 +_ 
 
 ## Introduction
 The SoapLibrary was created for those who want to use the Robot Framework as if they were using SoapUI, just send the request XML and get the response XML.
 
-![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/img_SoapUI.png)
+![alt text](https://github.com/MarketSquare/Robot-Framework-SOAP-Library/blob/master/Doc/img_SoapUI.png)
 
-![alt text](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/Doc/img2_SoapLibrary.png)
+![alt text](https://github.com/MarketSquare/Robot-Framework-SOAP-Library/blob/master/Doc/img2_SoapLibrary.png)
 
 ## Instalation
-For the first time install:
+For the first time installation:
 ```commandline
 pip install robotframework-soaplibrary
 ```
@@ -50,7 +50,7 @@ You can see [here](https://michaelhallik.github.io/blog/2022/04/10/Using-OpenSSL
 
 ## Keyword Documentation
 
-You can find the keywords documentation [here](https://raw.githack.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/master/Doc/SoapLibrary.html)     
+You can find the keywords documentation [here](https://raw.githack.com/MarketSquare/Robot-Framework-SOAP-Library/master/Doc/SoapLibrary.html)     
 
 ## Authors
 Initial development was sponsored by [Capgemini Engineering](https://www.capgemini.com/about-us/who-we-are/our-brands/capgemini-engineering/)
@@ -58,4 +58,4 @@ Initial development was sponsored by [Capgemini Engineering](https://www.capgemi
    - **Joao Gomes**
    
 ## License
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library/blob/master/LICENSE.md) file for details.   
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/MarketSquare/Robot-Framework-SOAP-Library/blob/master/LICENSE.md) file for details.   
