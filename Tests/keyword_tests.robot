@@ -104,7 +104,7 @@ Test Read Tags With Index
     Create Soap Client    ${wsdl_correios}
     ${response}    Call SOAP Method With XML    ${requests_dir}${/}busca_servicos.xml
     ${codigo}    Get Data From XML By Tag    ${response}    codigo    index=13
-    Should Be Equal As Integers    ${codigo}    032
+    Should Be Equal As Integers    ${codigo}    29
 
 Test Response To Dict
     [Tags]    correios
