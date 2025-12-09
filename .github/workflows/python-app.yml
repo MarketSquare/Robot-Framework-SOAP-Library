@@ -40,8 +40,9 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: robot_reports
+        path: reports
     - name: Send report to commit
       uses: joonvena/robotframework-reporter-action@v2.4
       with:
         gh_access_token: ${{ secrets.GITHUB_TOKEN }}
-        report_path: /robot_reports
+        report_path: reports/output.xml
