@@ -12,7 +12,7 @@ with open(version_file) as file:
     code = compile(file.read(), version_file, 'exec')
     exec(code)
 
-setup(name             = 'robotframework-soaplibrary2',
+setup(name             = 'robotframework-soaplibrary',
       version          = VERSION,
       description      = 'SOAP Library for Robot Framework',
 	  long_description = 'Test library for Robot Framework to create automated test like using SOAPUI',
