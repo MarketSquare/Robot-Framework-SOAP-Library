@@ -1,5 +1,6 @@
 LICENSE.md
 README.md
+pyproject.toml
 setup.py
 SoapLibrary/SoapLibrary.py
 SoapLibrary/__init__.py

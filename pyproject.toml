@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "robotframework-soaplibrary"
+version = "1.4"
+description = "SOAP Library for Robot Framework"
+readme = "README.md"
+requires-python = ">=3.7"
+
+dependencies = [
+    "robotframework",
+    "zeep",
+    "requests",
+    "urllib3",
+    "setuptools"
+]
+
+[project.optional-dependencies]
+
+[project.urls]
+Homepage = "https://github.com/MarketSquare/Robot-Framework-SOAP-Library"

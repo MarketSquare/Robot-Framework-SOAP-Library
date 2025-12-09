@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from os.path import abspath, dirname, join
 
 try:
@@ -6,7 +5,7 @@ try:
 except ImportError as error:
     from distutils.core import setup
 
-
+VERSION = None
 version_file = join(dirname(abspath(__file__)), 'SoapLibrary', 'version.py')
 
 with open(version_file) as file:
@@ -14,13 +13,13 @@ with open(version_file) as file:
     exec(code)
 
 setup(name             = 'robotframework-soaplibrary',
-      version          = '1.3',
+      version          = VERSION,
       description      = 'SOAP Library for Robot Framework',
 	  long_description = 'Test library for Robot Framework to create automated test like using SOAPUI',
       author           = 'Altran Portugal',
       author_email     = 'samuca@gmail.com',
       license          = 'MIT License',
-      url              = 'https://github.com/Altran-PT-GDC/Robot-Framework-SOAP-Library',
+      url              = 'https://github.com/MarketSquare/Robot-Framework-SOAP-Library',
       packages         = ['SoapLibrary'],
-      install_requires = ['robotframework', 'zeep', 'requests', 'urllib3']
+      install_requires = ['robotframework', 'zeep', 'requests', 'urllib3', 'setuptools']
       )

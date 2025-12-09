@@ -64,10 +64,10 @@ class SoapLibrary:
         session.cert = client_cert
         session.auth = HTTPBasicAuth(*auth) if auth else None
         self.client = Client(self.url, transport=Transport(session=session))
-        logger.info('Connected to: %s' % self.client.wsdl.location)
+        logger.info(f'Connected to: {self.client.wsdl.location}')
         info = self.client.service.__dict__
         operations = info["_operations"]
-        logger.info('Available operations: %s' % list(operations))
+        logger.info(f'Available operations: {list(operations)}')
         if use_binding_address:
             self.url = self.client.service._binding_options['address']
 
@@ -124,10 +124,10 @@ class SoapLibrary:
         if isinstance(data_list, (float, int)):
             return int(data_list)
         if len(data_list) == 0:
-            logger.warn('The search "%s" did not return any result! Please confirm the tag!' % xpath)
+            logger.warn(f'The search "{xpath}" did not return any result! Please confirm the tag!')
         elif len(data_list) > 1:
-            logger.debug('The tag you entered found %s items, returning the text in the index '
-                         'number %s, if you want a different index inform the argument index=N' % (len(data_list), index))
+            logger.debug(f'The tag you entered found {len(data_list)} items, returning the text in the index '
+                         f'number {index}, if you want a different index inform the argument index=N')
         return data_list[new_index].text
 
     @keyword("Edit XML Request")
@@ -160,11 +160,11 @@ class SoapLibrary:
             raise Exception("new_values_dict argument must be a dictionary")
         for key, value in new_values_dict.items():
             if len(xml.xpath(self._replace_xpath_by_local_name(key))) == 0:
-                logger.warn('Tag "%s" not found' % key)
+                logger.warn(f'Tag "{key}" not found')
                 continue
             xml_xpath = self._replace_xpath_by_local_name(key)
-            count = int(xml.xpath(("count(%s)" % xml_xpath)))
-            logger.debug("Found %s tags with xpath %s" % (str(count), xml_xpath))
+            count = int(xml.xpath(f"count({xml_xpath})"))
+            logger.debug(f"Found {(str(count))} tags with xpath {xml_xpath}")
             if repeated_tags == 'All' or count < 2:
                 for i in range(count):
                     xml.xpath(xml_xpath)[i].text = value
@@ -221,8 +221,8 @@ class SoapLibrary:
                 if type(result[key]) is list:
                     result[key].append(value)
                 else:
-                    tempvalue = result[key].copy()
-                    result[key] = [tempvalue, value]
+                    temp_value = result[key].copy()
+                    result[key] = [temp_value, value]
             else:
                 result[key] = value
         return result
@@ -400,10 +400,10 @@ class SoapLibrary:
         :param etree_response: response object in etree format.
         :param status: if is not None, then don´t raise error.
         """
-        logger.debug('URL: %s' % response.url)
+        logger.debug(f'URL: {response.url}')
         logger.debug(etree.tostring(etree_response, pretty_print=True, encoding='unicode'))
         if status is None and response.status_code != 200:
-            raise AssertionError('Request Error! Status Code: %s! Reason: %s' % (response.status_code, response.reason))
+            raise AssertionError(f'Request Error! Status Code: {response.status_code}! Reason: {response.reason}')
         self._print_request_info(etree_response)
 
     def _save_response_object(self, response):
@@ -413,7 +413,7 @@ class SoapLibrary:
 
         :param response, zeep response object.
         """
-        logger.info('Status code: %s' % response.status_code)
+        logger.info(f'Status code: {response.status_code}')
         self.response_obj = response
 
     @staticmethod
@@ -446,9 +446,9 @@ class SoapLibrary:
         :param save_folder: folder to save the new xml file.
         :param file_name: name of the new file.
         :param text: file text.
-        :return new file path.
+        :return: new file path.
         """
-        new_file_name = "%s.xml" % file_name
+        new_file_name = f"{file_name}.xml"
         new_file_path = os.path.join(save_folder, new_file_name)
         request_file = open(new_file_path, 'wb')
         request_file.write(text)
